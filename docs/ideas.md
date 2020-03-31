@@ -4,7 +4,9 @@
 
 ### Group Members ###
 Kyle Silverman: KSilverman
+
 Devon Endicott: dpendic
+
 Artem Aleksanyan: aaleksanyan
 
 ### Innovative Idea ###
