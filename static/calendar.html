@@ -6,7 +6,7 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
+		<link rel="stylesheet" href="css/main.css">
     <link href='lib/fullcalendar/core/main.css' rel='stylesheet' />
     <link href='lib/fullcalendar/daygrid/main.css' rel='stylesheet' />
 
@@ -24,6 +24,22 @@
           // height: 350
         });
 
+        // calendar.render();
+
+				calendar.addEvent({
+					title: 'CS 326 Lecture',
+					daysOfWeek: [2, 4],
+					startTime: '16:00',
+					endTime: '17:15',
+					endRecur: '2020-04-29'
+				});
+				calendar.addEvent({
+					title: 'CS 326 Discussion',
+					daysOfWeek: [1],
+					startTime: '16:00',
+					endTime: '17:15',
+					endRecur: '2020-04-29'
+				});
         calendar.render();
       });
     </script>
@@ -34,8 +50,13 @@
   			<span class="navbar-text"><img src="img/planet.png" alt="planet logo" class="planet" height="50px" width="60px"></span>
 		</nav>
 
+
     <div class="container fluid">
-      <div id="calendar" style=""></div>
+			<div class="row mx-n5 mt-5">
+				<div class="col-lg mx-5 module">
+    			<div id="calendar" style="padding: 20px"></div>
+				</div>
+			</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
