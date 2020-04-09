@@ -42,31 +42,31 @@ Devon: Calendar Page (also added calendar on dashboard page)
 
 ### Login Page ###
 
-![login wireframe](../static/imgs/login_wireframe.png)
+![login wireframe](../static/img/login_wireframe.png)
 
 ### Dashboard Page ### 
 
-![dashboard wireframe](../static/imgs/dashboard_wireframe.png)
+![dashboard wireframe](../static/img/dashboard_wireframe.png)
 
 ### Calendar Page ###
 
-![calendar wireframe](../static/imgs/calendar_wireframe.png)
+![calendar wireframe](../static/img/calendar_wireframe.png)
 
 ## HTML/CSS ##
 
 ### Login Page ###
 Per specifications, we needed a login page. So, we are just asking for a username and password. There is also an option to register as well.
 
-![login page](../static/imgs/login_ss.png)
+![login page](../static/img/login_ss.png)
 
 ### Dashboard Page ### 
 The idea of the dashboard is to lay out all the information for the user to see. We have a weekly small-scale calendar to visualize their work for the week. We also have a list of specified classes that the user has enrolled it. Lastly, we have the main board that shows the user which assignments should be worked on in order of best completion. We also have the ability to add/remove classes and to mark assignments as completed, or the user can edit those assignments or remove them entirely. This is done through modals, which can be seen on the following screen shot (the darkened area is the user's visable screen area).
 
-![dashboard page](../static/imgs/dashboard_ss.png)
+![dashboard page](../static/img/dashboard_ss.png)
 
-![dashboard page with modal](../static/imgs/dashboard_ss2.png)
+![dashboard page with modal](../static/img/dashboard_ss2.png)
 
 ### Calendar Page ###
 This calendar page will the show the entirerty of the calendar to the user. That is, they will be able to see what assignments are due when, and they can add events or anything else of the sort to keep their calendar all in one place.
 
-![calendar page](../static/imgs/calendar_ss.png)
+![calendar page](../static/img/calendar_ss.png)
