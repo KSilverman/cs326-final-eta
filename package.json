@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/KSilverman/cs326#readme",
   "dependencies": {
-    "bootstrap": "^4.4.1"
+    "@types/node": "^13.11.1",
+    "bootstrap": "^4.4.1",
+    "express": "^4.17.1"
   }
 }
