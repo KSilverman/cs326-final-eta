@@ -22,10 +22,12 @@
   },
   "homepage": "https://github.com/KSilverman/cs326#readme",
   "dependencies": {
+    "@types/js-cookie": "^2.2.6",
     "@types/node": "^13.11.1",
     "bootstrap": "^4.4.1",
     "browserify": "^16.5.1",
     "express": "^4.17.1",
+    "js-cookie": "^2.2.1",
     "mongodb": "^3.5.5"
   }
 }
