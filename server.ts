@@ -61,6 +61,20 @@ export class Server {
     this.app.post('/user/:uid/assignment/:id', this.RequestGetAssignment)
     this.app.post('/user/:uid/assignment/:id/delete', this.RequestDeleteAssignment)
     this.app.post('/user/:uid/assignment/:id/update', this.RequestUpdateAssignment)
+
+    // EXTRACURRICULAR STUFF
+    this.app.post('/user/:uid/extracurricular/all', this.RequestGetAllExtracurriculars)
+    this.app.post('/user/:uid/extracurricular/create', this.RequestCreateExtracurricular)
+    this.app.post('/user/:uid/extracurricular/:id', this.RequestGetExtracurricular)
+    this.app.post('/user/:uid/extracurricular/:id/delete', this.RequestDeleteExtracurricular)
+    this.app.post('/user/:uid/extracurricular/:id/update', this.RequestUpdateExtracurricular)
+
+    // EXAM STUFF
+    this.app.post('/user/:uid/exam/all', this.RequestGetAllExams)
+    this.app.post('/user/:uid/exam/create', this.RequestCreateExam)
+    this.app.post('/user/:uid/exam/:id', this.RequestGetExam)
+    this.app.post('/user/:uid/exam/:id/delete', this.RequestDeleteExam)
+    this.app.post('/user/:uid/exam/:id/update', this.RequestUpdateExam)
   }
 
   // Requests
