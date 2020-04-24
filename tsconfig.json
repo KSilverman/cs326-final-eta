@@ -1,17 +1,20 @@
 {
-    "compilerOptions": {
-        "target": "es2016",
-        "skipLibCheck": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "forceConsistentCasingInFileNames": true,
-        "noImplicitThis": true,
-        "noUnusedParameters": false,
-        "noFallthroughCasesInSwitch": true,
-        "strictNullChecks": true, // good idea not to disable
-        "pretty": true,
-        "module": "commonjs",
-        "outDir": "static/script/"
-    },
-    "files": [ "client.ts", "courses.ts" ] // change me
+  "compilerOptions": {
+    "target": "es2016",
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "strictNullChecks": true, // good idea not to disable
+    "pretty": true,
+    "module": "commonjs",
+    "outDir": "static/script/"
+  },
+  "files": [
+    "static/script/client.ts",
+    "static/script/courses.ts"
+  ]
 }
