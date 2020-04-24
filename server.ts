@@ -39,6 +39,7 @@ export class Server {
     this.app.use('/lib', express.static('static/lib'));
     this.app.use('/css', express.static('static/css'));
     this.app.use('/img', express.static('static/img'));
+    this.app.use('/script', express.static('static/script'));
 
     // API stuff
 
