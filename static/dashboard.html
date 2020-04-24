@@ -12,19 +12,22 @@
 
     <script src='lib/fullcalendar/core/main.js'></script>
     <script src='lib/fullcalendar/daygrid/main.js'></script>
+    <script src='script/client.js'></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: [ 'dayGrid' ],
-
-          // for week view
-          defaultView: 'dayGridWeek',
-          height: 320
-        });
-
-        calendar.render();
+        // var calendarEl = document.getElementById('calendar');
+				//
+        // var calendar = new FullCalendar.Calendar(calendarEl, {
+        //   plugins: [ 'dayGrid' ],
+				//
+        //   // for week view
+        //   defaultView: 'dayGridWeek',
+        //   height: 320
+        // });
+				//
+        // calendar.render();
+				setupDashboardCalendar();
+				updateCalendar();
       });
     </script>
 	</head>
@@ -315,7 +318,7 @@
 					© 2020 Copyright:<a href="#"> Team ETA @ UMass</a>
 				</div>
 			</div>
-			
+
 			<!-- ADD CLASS MODAL -->
 			<div class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="classLabel" aria-hidden="true">
 			  <div class="modal-dialog" role="document">

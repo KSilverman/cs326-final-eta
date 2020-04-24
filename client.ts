@@ -1,5 +1,8 @@
 //Get email and password from index.html and send to server
 const url = ""
+var userId = 11; // temp
+
+var FullCalendar; // ??? idk how to import
 
 function login(){
     (async() => {
@@ -20,6 +23,45 @@ function login(){
             window.location.href = url + "/dashboard";
         }
     })();
+}
+
+var calendar;
+
+function setupDashboardCalendar() {
+  var calendarEl = document.getElementById('calendar');
+
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    plugins: [ 'dayGrid' ],
+
+    // for week view
+    defaultView: 'dayGridWeek',
+    height: 320
+  });
+
+  calendar.render();
+}
+
+async function updateCalendar() : Promise<void> {
+  var resp = await postData('/user/' + userId + '/calendar', '');
+  var obj = await resp.json();
+
+  if (obj.status != 'success') {
+    console.error('Failed to poll calendar');
+    return;
+  }
+
+  var calendarElements = obj.calendar;
+
+  if (!calendarElements) {
+    console.error('Calendar response did not include elements');
+    return;
+  }
+
+  for (var element of calendarElements) {
+    calendar.addEvent(element.event)
+  }
+
+  calendar.render();
 }
 
 // NEW: helper method for posting data
