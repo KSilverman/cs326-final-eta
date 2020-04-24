@@ -26,10 +26,10 @@ function login(){
 var FullCalendar : any;
 var calendar : any;
 
-function setupLargeCalendar() : void {
+async function setupLargeCalendar() : Promise<void> {
   var calendarEl = document.getElementById('calendar');
 
-  var calendar = new FullCalendar.Calendar(calendarEl, {
+  calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: [ 'dayGrid' ],
 
     // for week view
