@@ -6,12 +6,12 @@
         "noImplicitReturns": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitThis": true,
-        "noUnusedParameters": true,
+        "noUnusedParameters": false,
         "noFallthroughCasesInSwitch": true,
         "strictNullChecks": true, // good idea not to disable
         "pretty": true,
         "module": "commonjs",
-        "outDir": "static/script/" 
+        "outDir": "static/script/"
     },
     "files": [ "client.ts", "courses.ts" ] // change me
 }
