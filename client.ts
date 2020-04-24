@@ -1,8 +1,6 @@
 //Get email and password from index.html and send to server
-const url = ""
+const url : string = ""
 var userId = 11; // temp
-
-var FullCalendar; // ??? idk how to import
 
 function login(){
     (async() => {
@@ -25,7 +23,8 @@ function login(){
     })();
 }
 
-var calendar;
+var FullCalendar : any;
+var calendar : any;
 
 function setupDashboardCalendar() {
   var calendarEl = document.getElementById('calendar');
@@ -65,7 +64,7 @@ async function updateCalendar() : Promise<void> {
 }
 
 // NEW: helper method for posting data
-async function postData(url, data) {
+async function postData(url : string, data : any) {
     const resp = await fetch(url,
                              {
                                  method: 'POST',

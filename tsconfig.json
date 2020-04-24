@@ -11,6 +11,7 @@
         "strictNullChecks": true, // good idea not to disable
         "pretty": true,
         "module": "commonjs",
+        "outDir": "static/script/" 
     },
     "files": [ "client.ts", "courses.ts" ] // change me
 }
