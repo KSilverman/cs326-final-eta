@@ -3,13 +3,14 @@ const path = require('path');
 
 import { User } from './types/user'
 import { Course } from './types/course'
+import { Database } from './database'
 
 export class Server {
-  private app;
-  private port;
-  private database;
+  private app : any;
+  private port : number;
+  private database : Database;
 
-  constructor(db, port: number) {
+  constructor(db : Database, port: number) {
     this.database = db
     this.port = port;
 
@@ -24,15 +25,15 @@ export class Server {
   private CreateRouting() {
 
     // express stuff
-    this.app.get('/', (req, res) => {
+    this.app.get('/', (req : any, res : any) => {
       res.sendFile(path.join(__dirname + '/static/index.html'));
     })
 
-    this.app.get('/dashboard', (req, res) => {
+    this.app.get('/dashboard', (req : any, res : any) => {
       res.sendFile(path.join(__dirname + '/static/dashboard.html'));
     })
 
-    this.app.get('/calendar', (req, res) => {
+    this.app.get('/calendar', (req : any, res : any) => {
       res.sendFile(path.join(__dirname + '/static/calendar.html'));
     })
 
@@ -83,7 +84,7 @@ export class Server {
 
   // Requests
 
-  private RequestRegister(req, res) {
+  private RequestRegister(req : any, res : any) {
     var response = {
       'status': 'success'
     }
@@ -92,7 +93,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestLogin(req, res) {
+  private RequestLogin(req : any, res : any) {
     var response = {
       'status': 'failed',
       'message': 'Incorrect username or password'
@@ -102,7 +103,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetUser(req, res) {
+  private RequestGetUser(req : any, res : any) {
     var response;
     try {
       var uid = parseInt(req.params.uid)
@@ -120,11 +121,11 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetAllCourses(req, res) {
+  private RequestGetAllCourses(req : any, res : any) {
     res.send('data for all courses belonging to ' + req.params.uid)
   }
 
-  private RequestCreateCourse(req, res) {
+  private RequestCreateCourse(req : any, res : any) {
     var response;
     try {
       var uid : number = parseInt(req.params.uid)
@@ -141,7 +142,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetCourse(req, res) {
+  private RequestGetCourse(req : any, res : any) {
     var response;
     try {
       var uid = parseInt(req.params.uid)
@@ -159,7 +160,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestDeleteCourse(req, res) {
+  private RequestDeleteCourse(req : any, res : any) {
     var response;
     try {
       var uid : number = parseInt(req.params.uid)
@@ -177,7 +178,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestUpdateCourse(req, res) {
+  private RequestUpdateCourse(req : any, res : any) {
     var response;
     try {
       var uid : number = parseInt(req.params.uid)
@@ -195,67 +196,67 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetAllAssignments(req, res) {
+  private RequestGetAllAssignments(req : any, res : any) {
 
   }
 
-  private RequestGetAssignment(req, res) {
+  private RequestGetAssignment(req : any, res : any) {
 
   }
 
-  private RequestCreateAssignment(req, res) {
+  private RequestCreateAssignment(req : any, res : any) {
 
   }
 
-  private RequestDeleteAssignment(req, res) {
+  private RequestDeleteAssignment(req : any, res : any) {
 
   }
 
-  private RequestUpdateAssignment(req, res) {
+  private RequestUpdateAssignment(req : any, res : any) {
 
   }
 
-  private RequestGetAllExams(req, res) {
+  private RequestGetAllExams(req : any, res : any) {
 
   }
 
-  private RequestGetExam(req, res) {
+  private RequestGetExam(req : any, res : any) {
 
   }
 
-  private RequestCreateExam(req, res) {
+  private RequestCreateExam(req : any, res : any) {
 
   }
 
-  private RequestDeleteExam(req, res) {
+  private RequestDeleteExam(req : any, res : any) {
 
   }
 
-  private RequestUpdateExam(req, res) {
+  private RequestUpdateExam(req : any, res : any) {
 
   }
 
-  private RequestGetAllExtracurriculars(req, res) {
+  private RequestGetAllExtracurriculars(req : any, res : any) {
 
   }
 
-  private RequestGetExtracurricular(req, res) {
+  private RequestGetExtracurricular(req : any, res : any) {
 
   }
 
-  private RequestCreateExtracurricular(req, res) {
+  private RequestCreateExtracurricular(req : any, res : any) {
 
   }
 
-  private RequestDeleteExtracurricular(req, res) {
+  private RequestDeleteExtracurricular(req : any, res : any) {
 
   }
 
-  private RequestUpdateExtracurricular(req, res) {
+  private RequestUpdateExtracurricular(req : any, res : any) {
 
   }
 
-  private RequestGetCalendar(req, res) {
+  private RequestGetCalendar(req : any, res : any) {
     var response = {
       'status': 'success',
       'calendar': [
