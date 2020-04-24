@@ -26,7 +26,21 @@ function login(){
 var FullCalendar : any;
 var calendar : any;
 
-function setupDashboardCalendar() {
+function setupLargeCalendar() : void {
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    plugins: [ 'dayGrid' ],
+
+    // for week view
+    // defaultView: 'dayGridWeek',
+    // height: 350
+  });
+
+  calendar.render();
+}
+
+function setupDashboardCalendar() : void {
   var calendarEl = document.getElementById('calendar');
 
   calendar = new FullCalendar.Calendar(calendarEl, {
