@@ -122,7 +122,25 @@ export class Server {
   }
 
   private RequestGetAllCourses(req : any, res : any) {
-    res.send('data for all courses belonging to ' + req.params.uid)
+    var response = {
+      status: 'success',
+      courses: [
+        {
+          title: 'CS 326',
+          id: 1
+        },
+        {
+          title: 'CS 373',
+          id: 2
+        },
+        {
+          title: 'CS 589',
+          id: 3
+        }
+      ]
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private RequestCreateCourse(req : any, res : any) {
