@@ -11,7 +11,14 @@ function login(){
 
         const login = {'email':email, 'password':pw}
         const newURL = url + "/users/login";
-        const resp = await postData(newURL, login)
+        const resp = await postData(newURL, login);
+        const j = await resp.json()
+        if (j['status'] == 'failed'){
+            let err = document.getElementById("errorlogin") as HTMLElement;
+            err.innerHTML = "<p>Login failed!</p>";
+        } else{
+            window.location.href = url + "/dashboard";
+        }
     })();
 }
 
