@@ -75,3 +75,7 @@ body {
 .planet {
 	animation: heartbeat 1.5s infinite;
 }
+
+.error{
+  color: red;
+}
