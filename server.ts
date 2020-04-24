@@ -75,6 +75,9 @@ export class Server {
     this.app.post('/user/:uid/exam/:id', this.RequestGetExam)
     this.app.post('/user/:uid/exam/:id/delete', this.RequestDeleteExam)
     this.app.post('/user/:uid/exam/:id/update', this.RequestUpdateExam)
+
+    // CALENDAR
+    this.app.post('/user/:uid/calendar', this.RequestGetCalendar)
   }
 
   // Requests
@@ -209,6 +212,79 @@ export class Server {
 
   private RequestUpdateAssignment(req, res) {
 
+  }
+
+  private RequestGetAllExams(req, res) {
+
+  }
+
+  private RequestGetExam(req, res) {
+
+  }
+
+  private RequestCreateExam(req, res) {
+
+  }
+
+  private RequestDeleteExam(req, res) {
+
+  }
+
+  private RequestUpdateExam(req, res) {
+
+  }
+
+  private RequestGetAllExtracurriculars(req, res) {
+
+  }
+
+  private RequestGetExtracurricular(req, res) {
+
+  }
+
+  private RequestCreateExtracurricular(req, res) {
+
+  }
+
+  private RequestDeleteExtracurricular(req, res) {
+
+  }
+
+  private RequestUpdateExtracurricular(req, res) {
+
+  }
+
+  private RequestGetCalendar(req, res) {
+    var response = {
+      'status': 'success',
+      'calendar': [
+        {
+          'type': 'course',
+          'id': 1,
+          'event': {
+  					title: 'CS 326 Lecture',
+  					daysOfWeek: [2, 4],
+  					startTime: '16:00',
+  					endTime: '17:15',
+  					endRecur: '2020-04-29'
+  				}
+        },
+        {
+          'type': 'course',
+          'id': 1,
+          'event': {
+  					title: 'CS 326 Discussion',
+  					daysOfWeek: [1],
+  					startTime: '16:00',
+  					endTime: '17:15',
+  					endRecur: '2020-04-29'
+  				}
+        }
+      ]
+    };
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   // USER
