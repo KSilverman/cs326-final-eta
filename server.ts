@@ -42,146 +42,159 @@ export class Server {
 
     // API stuff
 
-    this.app.post('/user/register', (req, res) => {
-      var response = {
-        'status': 'success'
-      }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response))
-    })
-
-    this.app.post('/user/login', (req, res) => {
-      var response = {
-        'status': 'failed',
-        'message': 'Incorrect username or password'
-      }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response))
-    })
+    this.app.post('/user/register', this.RequestRegister)
+    this.app.post('/user/login', this.RequestLogin)
 
     // ???
-    this.app.get('/user/:uid', (req, res) => {
-
-      var response;
-      try {
-        var uid = parseInt(req.params.uid)
-        if (!uid) throw new Error();
-
-        response = this.GetUser(uid)
-      } catch(e) {
-        response = {
-          'status': 'failed',
-          'error': req.params.uid
-        }
-      }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response))
-
-    })
+    this.app.post('/user/:uid', this.RequestGetUser)
 
     // COURSE STUFF
-
-    this.app.get('/user/:uid/course/all', (req, res) => {
-      res.send('data for all courses belonging to ' + req.params.uid)
-    })
-
-    this.app.get('/user/:uid/course/create', (req, res) => {
-      var response;
-      try {
-        var uid : number = parseInt(req.params.uid)
-        console.log(uid)
-
-        response = this.CreateCourse(uid, new Course(uid, 0, "A New Course"))
-      } catch(e) {
-        response = {
-          'status': 'failed'
-        }
-      }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response))
-    })
-
-    this.app.get('/user/:uid/course/:id', (req, res) => {
-
-      var response;
-      try {
-        var uid = parseInt(req.params.uid)
-        var id = parseInt(req.params.id)
-        if (!uid || !id) throw new Error();
-
-        response = this.GetCourse(uid, id)
-      } catch(e) {
-        response = {
-          'status': 'failed'
-        }
-      }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response))
-
-    })
-
-    this.app.get('/user/:uid/course/:id/delete', (req, res) => {
-      var response;
-      try {
-        var uid : number = parseInt(req.params.uid)
-        var id : number = parseInt(req.params.id)
-        if (!uid || !id) throw new Error();
-
-        response = this.DeleteCourse(uid, id)
-      } catch(e) {
-        response = {
-          'status': 'failed'
-        }
-      }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response))
-    })
-
-    this.app.get('/user/:uid/course/:id/update', (req, res) => {
-      var response;
-      try {
-        var uid : number = parseInt(req.params.uid)
-        var id : number = parseInt(req.params.id)
-        if (!uid || !id) throw new Error();
-
-        response = this.UpdateCourse(uid, id, new Course(uid, id, "An Updated Course"))
-      } catch(e) {
-        response = {
-          'status': 'failed'
-        }
-      }
-
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(response))
-    })
+    this.app.post('/user/:uid/course/all', this.RequestGetAllCourses)
+    this.app.post('/user/:uid/course/create', this.RequestCreateCourse)
+    this.app.post('/user/:uid/course/:id', this.RequestGetCourse)
+    this.app.post('/user/:uid/course/:id/delete', this.RequestDeleteCourse)
+    this.app.post('/user/:uid/course/:id/update', this.RequestUpdateCourse)
 
     // ASSIGNMENT STUFF
+    this.app.post('/user/:uid/assignment/all', this.RequestGetAllAssignments)
+    this.app.post('/user/:uid/assignment/create', this.RequestCreateAssignment)
+    this.app.post('/user/:uid/assignment/:id', this.RequestGetAssignment)
+    this.app.post('/user/:uid/assignment/:id/delete', this.RequestDeleteAssignment)
+    this.app.post('/user/:uid/assignment/:id/update', this.RequestUpdateAssignment)
+  }
 
-    this.app.get('/user/:uid/assignment/all', (req, res) => {
-      res.send('data for all assignments belonging to ' + req.params.uid)
-    })
+  // Requests
 
-    this.app.get('/user/:uid/assignment/create', (req, res) => {
-      res.send('create a assignment belonging to ' + req.params.uid)
-    })
+  private RequestRegister(req, res) {
+    var response = {
+      'status': 'success'
+    }
 
-    this.app.get('/user/:uid/assignment/:id', (req, res) => {
-      res.send('data for assignment with id ' + req.params.id)
-    })
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
+  }
 
-    this.app.get('/user/:uid/assignment/:id/delete', (req, res) => {
-      res.send('delete assignment ' + req.params.id + ' belonging to ' + req.params.uid)
-    })
+  private RequestLogin(req, res) {
+    var response = {
+      'status': 'failed',
+      'message': 'Incorrect username or password'
+    }
 
-    this.app.get('/user/:uid/assignment/:id/update', (req, res) => {
-      res.send('update assignment ' + req.params.id + ' belonging to ' + req.params.uid)
-    })
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
+  }
+
+  private RequestGetUser(req, res) {
+    var response;
+    try {
+      var uid = parseInt(req.params.uid)
+      if (!uid) throw new Error();
+
+      response = this.GetUser(uid)
+    } catch(e) {
+      response = {
+        'status': 'failed',
+        'error': 'Unable to get ' + req.params.uid
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
+  }
+
+  private RequestGetAllCourses(req, res) {
+    res.send('data for all courses belonging to ' + req.params.uid)
+  }
+
+  private RequestCreateCourse(req, res) {
+    var response;
+    try {
+      var uid : number = parseInt(req.params.uid)
+      console.log(uid)
+
+      response = this.CreateCourse(uid, new Course(uid, 0, "A New Course"))
+    } catch(e) {
+      response = {
+        'status': 'failed'
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
+  }
+
+  private RequestGetCourse(req, res) {
+    var response;
+    try {
+      var uid = parseInt(req.params.uid)
+      var id = parseInt(req.params.id)
+      if (!uid || !id) throw new Error();
+
+      response = this.GetCourse(uid, id)
+    } catch(e) {
+      response = {
+        'status': 'failed'
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
+  }
+
+  private RequestDeleteCourse(req, res) {
+    var response;
+    try {
+      var uid : number = parseInt(req.params.uid)
+      var id : number = parseInt(req.params.id)
+      if (!uid || !id) throw new Error();
+
+      response = this.DeleteCourse(uid, id)
+    } catch(e) {
+      response = {
+        'status': 'failed'
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
+  }
+
+  private RequestUpdateCourse(req, res) {
+    var response;
+    try {
+      var uid : number = parseInt(req.params.uid)
+      var id : number = parseInt(req.params.id)
+      if (!uid || !id) throw new Error();
+
+      response = this.UpdateCourse(uid, id, new Course(uid, id, "An Updated Course"))
+    } catch(e) {
+      response = {
+        'status': 'failed'
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
+  }
+
+  private RequestGetAllAssignments(req, res) {
+
+  }
+
+  private RequestGetAssignment(req, res) {
+
+  }
+
+  private RequestCreateAssignment(req, res) {
+
+  }
+
+  private RequestDeleteAssignment(req, res) {
+
+  }
+
+  private RequestUpdateAssignment(req, res) {
+
   }
 
   // USER

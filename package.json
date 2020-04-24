@@ -24,6 +24,7 @@
   "dependencies": {
     "@types/node": "^13.11.1",
     "bootstrap": "^4.4.1",
+    "browserify": "^16.5.1",
     "express": "^4.17.1",
     "mongodb": "^3.5.5"
   }
