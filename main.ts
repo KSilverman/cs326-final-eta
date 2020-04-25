@@ -6,7 +6,7 @@ const database = new Database()
 
 database.connect("mongodb://localhost:27017/mydb").then(() => {
 
-  const server = new Server(database, parseInt(process.env.PORT));
+  const server = new Server(database, process.env.PORT);
 
 }).catch((e) => {
 
