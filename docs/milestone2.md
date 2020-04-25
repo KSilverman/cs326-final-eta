@@ -143,3 +143,9 @@ All the assignments that are active (that is, in the database and have not been 
 Lastly, if you need to change any information about an assignment or delete it, a user may click the blue button or the red 'x', respectively, to the right of any given assignment. The edit button will open a populated pop-up similar to the one in 'new class'.
 
 ![update assignment][update]
+
+[remove]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/m2-course-remove.PNG?raw=true "Remove course"
+[read]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/m2-read.PNG?raw=true "Read assignments"
+[update]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/m2-update-item.PNG?raw=true "Edit and delete"
+[create]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/m2-create.png?raw=true "Create assignment"
+[create-course]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/m2-create-course.PNG?raw=true "Create course"
