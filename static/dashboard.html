@@ -13,6 +13,7 @@
     <script src='lib/fullcalendar/core/main.js'></script>
     <script src='lib/fullcalendar/daygrid/main.js'></script>
     <script src='script/client.js'></script>
+    <script src='script/courses.js'></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         // var calendarEl = document.getElementById('calendar');
@@ -29,6 +30,7 @@
 				setupDashboardCalendar();
 				updateCalendar();
 				updateAssignments();
+				getCourses(10);
       });
     </script>
 	</head>
