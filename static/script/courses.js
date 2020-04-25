@@ -32,6 +32,7 @@ function getCourses(uuid) {
             const resp = yield postData(newURL, '');
             const j = yield resp.json();
             let course_list = document.getElementById("courses");
+            let course_options = document.getElementById("class-pick");
             if (j.status !== 'error') {
                 if (j.courses.length == 0) {
                     console.log("No courses found for user " + uuid);
@@ -46,6 +47,11 @@ function getCourses(uuid) {
                     courses += '<li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button></li>';
                     course_list.innerHTML = courses;
                 }
+                let course_picks = "";
+                for (let i = 0; i < j.courses.length; i++) {
+                    course_picks += '<option>' + j.courses[i].title + '</option>';
+                }
+                course_options.innerHTML = course_picks;
             }
             else {
                 console.log("Error on post request for user courses");

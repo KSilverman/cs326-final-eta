@@ -25,6 +25,7 @@ async function getCourses(uuid: any) : Promise<void>
 		const resp = await postData(newURL, '');
 		const j = await resp.json();
 		let course_list = document.getElementById("courses") as HTMLElement;
+		let course_options = document.getElementById("class-pick") as HTMLElement;
 		if (j.status !== 'error') 
 		{
 			if(j.courses.length == 0)
@@ -43,6 +44,12 @@ async function getCourses(uuid: any) : Promise<void>
 				courses += '<li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button></li>';
 				course_list.innerHTML = courses;
 			}
+			let course_picks: string = "";
+			for(let i: number = 0; i < j.courses.length; i++)
+			{
+				course_picks += '<option>'+j.courses[i].title+'</option>';
+			}
+			course_options.innerHTML = course_picks;
 		} 
 		else 
 		{
