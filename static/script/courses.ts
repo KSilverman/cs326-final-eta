@@ -1,6 +1,6 @@
 const url = "http://localhost:8080/";
 
-export async function postData(url, data) {
+export async function postData(url: string, data: string) {
     const resp = await fetch(url,
                              {
                                  method: 'POST',
@@ -19,10 +19,10 @@ export async function postData(url, data) {
 export function getCourses(uuid: string)
 {
 	(async () => {
-		const data = { 'uid' : uuid };
+		const data = '{ \'uid\' : uuid }';
 		const newURL = url + "/user/:"+uuid+"/course/all";
 		console.log("Sending courses request to " + newURL);
-		const resp = await postData(newURL, data);
+		const resp = await postData(newURL, JSON.parse(data));
 		const j = await resp.json();
 		let course_list = document.getElementById("output") as HTMLElement;
 		if (j['status'] !== 'error') 
