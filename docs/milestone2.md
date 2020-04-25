@@ -113,3 +113,10 @@ Updates a exam
 `/user/:uid/exam/delete`
 
 Deletes a exam
+
+
+### Misc ###
+
+`/user/:uid/calendar`
+
+Returns the events to populate the calendar with
