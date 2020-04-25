@@ -10,7 +10,7 @@ export class Server {
   private port : number;
   private database : Database;
 
-  constructor(db : Database, port: number) {
+  constructor(db : Database, port: any) {
     this.database = db
     this.port = port;
 
