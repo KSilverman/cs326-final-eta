@@ -245,6 +245,16 @@ export class Server {
               dueDate: '4/25/2020',
               expectedTTC: '4 hours',
               notes: 'Important to start earlier!'
+            },
+            {
+              title: 'Milestone 4',
+              course: {
+                title: 'CS 326',
+                id: 7
+              },
+              dueDate: '4/30/2020',
+              expectedTTC: '40 hours',
+              notes: 'Important to start earlier!'
             }
           ]
         }

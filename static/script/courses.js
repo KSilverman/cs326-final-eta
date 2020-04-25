@@ -35,7 +35,7 @@ function getCourses(uuid) {
             if (j.status !== 'error') {
                 if (j.courses.length == 0) {
                     console.log("No courses found for user " + uuid);
-                    course_list.innerHTML = '<li class="list-group-item d-flex justify-content-between"> <b>No Courses Found</b></li>';
+                    course_list.innerHTML = '<li class="list-group-item d-flex justify-content-between"> <b>No Courses Found</b></li><li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button></li>';
                 }
                 else {
                     console.log("Courses found for user " + uuid);
@@ -43,6 +43,7 @@ function getCourses(uuid) {
                     for (let i = 0; i < j.courses.length; i++) {
                         courses += '<li class="list-group-item d-flex justify-content-between"> <b>' + j.courses[i].title + '</b><button type="button" class="btn btn-danger btn-sm">Remove</button></li>';
                     }
+                    courses += '<li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button></li>';
                     course_list.innerHTML = courses;
                 }
             }
