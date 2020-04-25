@@ -3,10 +3,17 @@ import { Server } from './server'
 
 const database = new Database()
 
+var port : number;
+
+if (process.env.PORT != null) {
+  port = parseInt(process.env.PORT as string)
+} else {
+  port = 8080;
+}
 
 database.connect("mongodb://localhost:27017/mydb").then(() => {
 
-  const server = new Server(database, process.env.PORT);
+  const server = new Server(database, port);
 
 }).catch((e) => {
 
