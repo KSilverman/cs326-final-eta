@@ -1,6 +1,6 @@
-const url = "http://localhost:8080/";
+//const url = "http://localhost:80/";
 
-export async function postData(url: string, data: string) {
+/*async function postData(url: string, data: string) {
     const resp = await fetch(url,
                              {
                                  method: 'POST',
@@ -14,21 +14,20 @@ export async function postData(url: string, data: string) {
                                  body: JSON.stringify(data)
                              });
     return resp;
-}
+}*/
 
-export function getCourses(uuid: string)
+async function getCourses(uuid: any) : Promise<void>
 {
 	(async () => {
 		const data = '{ \'uid\' : uuid }';
-		const newURL = url + "/user/:"+uuid+"/course/all";
+		const newURL = url + "user/:"+uuid+"/course/all";
 		console.log("Sending courses request to " + newURL);
-		const resp = await postData(newURL, JSON.parse(data));
+		const resp = await postData(newURL, '');
 		const j = await resp.json();
-		let course_list = document.getElementById("output") as HTMLElement;
-		if (j['status'] !== 'error') 
+		let course_list = document.getElementById("courses") as HTMLElement;
+		if (j.status !== 'error') 
 		{
-			console.log("Recieved data from courses request");
-			if(j['courses'].length == 0)
+			if(j.courses.length == 0)
 			{
 				console.log("No courses found for user " + uuid);
 				course_list.innerHTML = '<li class="list-group-item d-flex justify-content-between"> <b>No Courses Found</b></li>';
@@ -37,15 +36,16 @@ export function getCourses(uuid: string)
 			{
 				console.log("Courses found for user " + uuid);
 				let courses: string = "";
-				for(let i: number = 0; i < j['courses'].length; i++)
+				for(let i: number = 0; i < j.courses.length; i++)
 				{
-					courses += '<li class="list-group-item d-flex justify-content-between"> <b>'+j['courses'][i]+'</b></li>';
+					courses += '<li class="list-group-item d-flex justify-content-between"> <b>'+j.courses[i].title+'</b><button type="button" class="btn btn-danger btn-sm">Remove</button></li>';
 				} 
 				course_list.innerHTML = courses;
 			}
 		} 
 		else 
 		{
+			console.log("Error on post request for user courses");
 		    course_list.innerHTML = '<li class="list-group-item d-flex justify-content-between"> <b>Error Fetching Courses</b></li>';
 		}
     })();
