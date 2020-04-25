@@ -29,10 +29,10 @@ function postData(url, data) {
 exports.postData = postData;
 function getCourses(uuid) {
     (() => __awaiter(this, void 0, void 0, function* () {
-        const data = { 'uid': uuid };
+        const data = '{ \'uid\' : uuid }';
         const newURL = url + "/user/:" + uuid + "/course/all";
         console.log("Sending courses request to " + newURL);
-        const resp = yield postData(newURL, data);
+        const resp = yield postData(newURL, JSON.parse(data));
         const j = yield resp.json();
         let course_list = document.getElementById("output");
         if (j['status'] !== 'error') {
