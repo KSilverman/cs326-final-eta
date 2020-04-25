@@ -124,3 +124,22 @@ Deletes a exam
 `/user/:uid/calendar`
 
 Returns the events to populate the calendar with
+
+### Screenshots/usage ###
+
+This pop-up allows you to add a new assignment with a class dropdown, the assignment's name, the due date, expected time to completeion and extra notes. You can also add a new class with another pop-up shown.
+
+![create assignment][create]
+![create course][create-course]
+
+Should you for some reason no longer need to have a class, you are able to delete it using the "Remove" button shown here.
+
+![remove course][remove]
+
+All the assignments that are active (that is, in the database and have not been completed) are shown in a ranked list in the table in the bottom of dashboard, seen here:
+
+![assignments][read]
+
+Lastly, if you need to change any information about an assignment or delete it, a user may click the blue button or the red 'x', respectively, to the right of any given assignment. The edit button will open a populated pop-up similar to the one in 'new class'.
+
+![update assignment][update]
