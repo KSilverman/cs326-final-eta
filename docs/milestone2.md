@@ -1,9 +1,13 @@
 # Milestone 2 #
 
+https://cs326-final-eta.herokuapp.com/dashboard
+
 ## Division of Labor ##
 
 Kyle - Courses, Edit/Update Modals
+
 Devon - Calendar, Assignment population
+
 Artem - User/Login
 
 ## APIS ##
