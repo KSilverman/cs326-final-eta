@@ -86,10 +86,6 @@ async function updateAssignments() : Promise<void> {
     return;
   }
 
-  console.log(obj.status)
-
-  console.log(obj)
-
   var categories = obj.categories;
 
   var html : string = '';
