@@ -91,21 +91,24 @@ export class Server {
       'status': 'success',
       user: null
     }
-    
+
     try {
+      // todo validation
+
       let name = req.body.name;
-      let password = req.body.password;
-      let hash = await User.createHash(password)
+      let hash = await User.createHash(req.body.password)
 
-      // TODO validation, get new user id
+      let user : User = await this.database.createUser(name, hash)
 
-      let user : User = new User(7, name, hash);
-      this.database.putUser(user)
-
-      response.user = user;
+      response = {
+        status: 'success',
+        user: await user.objectify()
+      };
     } catch (e) {
       console.log(e)
-      response.status = 'except';
+      response = {
+        status: 'error'
+      };
     }
 
     res.setHeader('Content-Type', 'application/json');

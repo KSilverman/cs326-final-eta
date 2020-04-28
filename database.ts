@@ -22,12 +22,62 @@ export class Database {
           reject(err);
           return;
         }
-        console.log("Database created!");
+        this.init();
+        console.log("Database connected.");
         // db.close();
         resolve();
       });
 
     });
+  }
+
+  private async init() : Promise<void> {
+    let db = this.client.db(this.dbName);
+    let collections = ["users"];
+    for (var collectionName of collections) {
+      var seqDoc = await db.collection(collectionName).findOneAndUpdate(
+        {
+          _id: 'sequence'
+        },
+        {
+          $setOnInsert: {seqValue: 0},
+        },
+        {
+          upsert: true,
+        }
+      );
+    }
+  }
+
+  private async getSequenceNextValue(collectionName : string) : Promise<number> {
+    let db = this.client.db(this.dbName);
+    var seqDoc = await db.collection(collectionName).findOneAndUpdate(
+      {
+        _id: 'sequence'
+      },
+      {
+        $inc: { seqValue: 1 },
+      },
+      {
+        new: true
+      }
+    );
+    
+    return seqDoc.value.seqValue;
+  }
+
+  private async getNextUserId() : Promise<number> {
+    let id = await this.getSequenceNextValue('users')
+    return id;
+  }
+
+  public async createUser(username : string, hash : string) : Promise<User> {
+    let id = await this.getNextUserId();
+
+    let user : User = new User(id, username, hash);
+    await this.putUser(user);
+
+    return user;
   }
 
   public async putUser(user : User) : Promise<void> {
@@ -61,6 +111,6 @@ export class Database {
 
     let user : User = new User(res.id, res.username, res.hash);
 
-	  return user;
+    return user;
   }
 }
