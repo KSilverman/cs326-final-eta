@@ -44,11 +44,13 @@ export class Server {
 
     // API stuff
 
-    this.app.post('/user/register', this.RequestRegister)
+    this.app.use(express.json())
+
+    this.app.post('/user/register', this.RequestRegister.bind(this))
     this.app.post('/user/login', this.RequestLogin)
 
     // ???
-    this.app.post('/user/:uid', this.RequestGetUser)
+    this.app.post('/user/:uid', this.RequestGetUser.bind(this))
 
     // COURSE STUFF
     this.app.post('/user/:uid/course/all', this.RequestGetAllCourses)
@@ -84,9 +86,26 @@ export class Server {
 
   // Requests
 
-  private RequestRegister(req : any, res : any) {
-    var response = {
-      'status': 'success'
+  private async RequestRegister(req : any, res : any) {
+    var response : any = {
+      'status': 'success',
+      user: null
+    }
+    
+    try {
+      let name = req.body.name;
+      let password = req.body.password;
+      let hash = await User.createHash(password)
+
+      // TODO validation, get new user id
+
+      let user : User = new User(7, name, hash);
+      this.database.putUser(user)
+
+      response.user = user;
+    } catch (e) {
+      console.log(e)
+      response.status = 'except';
     }
 
     res.setHeader('Content-Type', 'application/json');
@@ -99,18 +118,26 @@ export class Server {
       'message': 'Incorrect username or password'
     }
 
+    let name = req.body.name;
+    let password = req.body.password;
+
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetUser(req : any, res : any) {
+  private async RequestGetUser(req : any, res : any) {
     var response;
     try {
       var uid = parseInt(req.params.uid)
       if (!uid) throw new Error();
+      let user : User = await this.database.getUser(uid)
 
-      response = this.GetUser(uid)
+      response = {
+        'status': 'success',
+        'user': await user.objectify()
+      }
     } catch(e) {
+      console.log(e)
       response = {
         'status': 'failed',
         'error': 'Unable to get ' + req.params.uid
@@ -351,19 +378,6 @@ export class Server {
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
-  }
-
-  // USER
-
-  private GetUser(uid : number) {
-    var user = new User(uid, 'Devon'); // flubbery
-
-    var response = {
-      'status': 'success',
-      'user': user
-    }
-
-    return response;
   }
 
   // Course
