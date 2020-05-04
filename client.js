@@ -20,6 +20,7 @@ function login() {
         const login = { 'email': email, 'password': pw };
         const newURL = url + "/users/login";
         const resp = yield postData(newURL, login);
+        console.log(resp)
         const j = yield resp.json();
         if (j['status'] == 'failed') {
             let err = document.getElementById("errorlogin");

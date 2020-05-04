@@ -19,14 +19,15 @@
 async function getCourses(uuid: any) : Promise<void>
 {
 	(async () => {
-		const data = '{ \'uid\' : uuid }';
-		const newURL = url + "user/:"+uuid+"/course/all";
+		const data = {uid: uuid};
+		const newURL = `user/${uuid}/course/all`;
 		console.log("Sending courses request to " + newURL);
-		const resp = await postData(newURL, '');
+		const resp = await postData(newURL, data);
+
 		const j = await resp.json();
 		let course_list = document.getElementById("courses") as HTMLElement;
 		let course_options = document.getElementById("class-pick") as HTMLElement;
-		if (j.status !== 'error') 
+		if (j.status !== 'error')
 		{
 			if(j.courses.length == 0)
 			{
@@ -50,8 +51,8 @@ async function getCourses(uuid: any) : Promise<void>
 				course_picks += '<option>'+j.courses[i].title+'</option>';
 			}
 			course_options.innerHTML = course_picks;
-		} 
-		else 
+		}
+		else
 		{
 			console.log("Error on post request for user courses");
 		    course_list.innerHTML = '<li class="list-group-item d-flex justify-content-between"> <b>Error Fetching Courses</b></li>';

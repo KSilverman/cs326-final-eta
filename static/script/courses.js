@@ -26,10 +26,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 function getCourses(uuid) {
     return __awaiter(this, void 0, void 0, function* () {
         (() => __awaiter(this, void 0, void 0, function* () {
-            const data = '{ \'uid\' : uuid }';
-            const newURL = url + "user/:" + uuid + "/course/all";
+            const data = { uid: uuid };
+            const newURL = `user/${uuid}/course/all`;
             console.log("Sending courses request to " + newURL);
-            const resp = yield postData(newURL, '');
+            const resp = yield postData(newURL, data);
             const j = yield resp.json();
             let course_list = document.getElementById("courses");
             let course_options = document.getElementById("class-pick");
