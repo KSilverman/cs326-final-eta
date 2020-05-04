@@ -43,7 +43,7 @@ async function register() : Promise<void> {
   if (obj.status != 'success') {
     err.innerHTML = "<p>" + obj.message + "</p>";
   } else {
-    // window.location.href = '/dashboard';
+    err.innerHTML = "<p>Success! Please login</p>";
   }
 }
 
@@ -79,7 +79,7 @@ function setupDashboardCalendar() : void {
 }
 
 async function updateCalendar() : Promise<void> {
-  var resp = await postData('/user/' + userId + '/calendar', {});
+  var resp = await postData('/api/calendar', {});
   var obj = await resp.json();
 
   if (obj.status != 'success') {
@@ -102,9 +102,13 @@ async function updateCalendar() : Promise<void> {
 }
 
 async function updateAssignments() : Promise<void> {
-  var resp = await postData('/user/' + userId + '/assignment/all', {});
+  var resp = await postData('/api/assignment/all', {});
 
   var obj = await resp.json();
+
+  if (obj.status == 'unauthorized') {
+    window.location.href = '/'
+  }
 
   if (obj.status != 'success') {
     console.error('Failed to poll assignments');
@@ -162,17 +166,17 @@ async function updateAssignments() : Promise<void> {
 // NEW: helper method for posting data
 async function postData(url : string, data : any) {
   if (!data) data = {}
-    const resp = await fetch(url,
-                             {
-                                 method: 'POST',
-                                 mode: 'cors',
-                                 cache: 'no-cache',
-                                 credentials: 'same-origin',
-                                 headers: {
-                                     'Content-Type': 'application/json'
-                                 },
-                                 redirect: 'follow',
-                                 body: JSON.stringify(data)
-                             });
-    return resp;
+  const resp = await fetch(url,
+    {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow',
+    body: JSON.stringify(data)
+  });
+  return resp;
 }

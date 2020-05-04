@@ -64,39 +64,48 @@ export class Server {
     this.app.post('/user/:uid', this.RequestGetUser.bind(this))
 
     // COURSE STUFF
-    this.app.post('/user/:uid/course/all', this.RequestGetAllCourses)
-    this.app.post('/user/:uid/course/create', this.RequestCreateCourse)
-    this.app.post('/user/:uid/course/:id', this.RequestGetCourse)
-    this.app.post('/user/:uid/course/:id/delete', this.RequestDeleteCourse)
-    this.app.post('/user/:uid/course/:id/update', this.RequestUpdateCourse)
+    this.app.post('/api/course/all', this.RequestGetAllCourses.bind(this))
+    this.app.post('/api/course/create', this.RequestCreateCourse.bind(this))
+    this.app.post('/api/course/:id', this.RequestGetCourse.bind(this))
+    this.app.post('/api/course/:id/delete', this.RequestDeleteCourse.bind(this))
+    this.app.post('/api/course/:id/update', this.RequestUpdateCourse.bind(this))
 
     // ASSIGNMENT STUFF
-    this.app.post('/user/:uid/assignment/all', this.RequestGetAllAssignments)
-    this.app.post('/user/:uid/assignment/create', this.RequestCreateAssignment)
-    this.app.post('/user/:uid/assignment/:id', this.RequestGetAssignment)
-    this.app.post('/user/:uid/assignment/:id/delete', this.RequestDeleteAssignment)
-    this.app.post('/user/:uid/assignment/:id/update', this.RequestUpdateAssignment)
+    this.app.post('/api/assignment/all', this.RequestGetAllAssignments.bind(this))
+    this.app.post('/api/assignment/create', this.RequestCreateAssignment.bind(this))
+    this.app.post('/api/assignment/:id', this.RequestGetAssignment.bind(this))
+    this.app.post('/api/assignment/:id/delete', this.RequestDeleteAssignment.bind(this))
+    this.app.post('/api/assignment/:id/update', this.RequestUpdateAssignment.bind(this))
 
     // EXTRACURRICULAR STUFF
-    this.app.post('/user/:uid/extracurricular/all', this.RequestGetAllExtracurriculars)
-    this.app.post('/user/:uid/extracurricular/create', this.RequestCreateExtracurricular)
-    this.app.post('/user/:uid/extracurricular/:id', this.RequestGetExtracurricular)
-    this.app.post('/user/:uid/extracurricular/:id/delete', this.RequestDeleteExtracurricular)
-    this.app.post('/user/:uid/extracurricular/:id/update', this.RequestUpdateExtracurricular)
+    this.app.post('/api/extracurricular/all', this.RequestGetAllExtracurriculars.bind(this))
+    this.app.post('/api/extracurricular/create', this.RequestCreateExtracurricular.bind(this))
+    this.app.post('/api/extracurricular/:id', this.RequestGetExtracurricular.bind(this))
+    this.app.post('/api/extracurricular/:id/delete', this.RequestDeleteExtracurricular.bind(this))
+    this.app.post('/api/extracurricular/:id/update', this.RequestUpdateExtracurricular.bind(this))
 
     // EXAM STUFF
-    this.app.post('/user/:uid/exam/all', this.RequestGetAllExams)
-    this.app.post('/user/:uid/exam/create', this.RequestCreateExam)
-    this.app.post('/user/:uid/exam/:id', this.RequestGetExam)
-    this.app.post('/user/:uid/exam/:id/delete', this.RequestDeleteExam)
-    this.app.post('/user/:uid/exam/:id/update', this.RequestUpdateExam)
+    this.app.post('/api/exam/all', this.RequestGetAllExams.bind(this))
+    this.app.post('/api/exam/create', this.RequestCreateExam.bind(this))
+    this.app.post('/api/exam/:id', this.RequestGetExam.bind(this))
+    this.app.post('/api/exam/:id/delete', this.RequestDeleteExam.bind(this))
+    this.app.post('/api/exam/:id/update', this.RequestUpdateExam.bind(this))
 
     // CALENDAR
-    this.app.post('/user/:uid/calendar', this.RequestGetCalendar)
+    this.app.post('/api/calendar', this.RequestGetCalendar.bind(this))
   }
 
   private checkAuthorization(id1 : number, id2 : number) : boolean {
     return (id1 == id2)
+  }
+
+  private validateSessionAndGetUID(req : any) : number | null {
+    console.log(req.session)
+    if (req.session.uid) {
+      return req.session.uid
+    } else {
+      return null;
+    }
   }
 
   // Requests
@@ -194,6 +203,13 @@ export class Server {
   }
 
   private RequestGetAllCourses(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req)
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
+
     var response = {
       status: 'success',
       courses: [
