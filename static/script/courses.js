@@ -27,10 +27,14 @@ function getCourses(uuid) {
     return __awaiter(this, void 0, void 0, function* () {
         (() => __awaiter(this, void 0, void 0, function* () {
             const data = { uid: uuid };
-            const newURL = `user/${uuid}/course/all`;
+            const newURL = `/api/course/all`;
             console.log("Sending courses request to " + newURL);
             const resp = yield postData(newURL, data);
             const j = yield resp.json();
+            if (j.status == 'unauthorized') {
+                window.location.href = '/';
+                return;
+            }
             let course_list = document.getElementById("courses");
             let course_options = document.getElementById("class-pick");
             if (j.status !== 'error') {

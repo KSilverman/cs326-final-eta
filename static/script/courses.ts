@@ -20,11 +20,17 @@ async function getCourses(uuid: any) : Promise<void>
 {
 	(async () => {
 		const data = {uid: uuid};
-		const newURL = `user/${uuid}/course/all`;
+		const newURL = `/api/course/all`;
 		console.log("Sending courses request to " + newURL);
 		const resp = await postData(newURL, data);
 
 		const j = await resp.json();
+
+		if (j.status == 'unauthorized') {
+			window.location.href = '/'
+			return;
+		}
+
 		let course_list = document.getElementById("courses") as HTMLElement;
 		let course_options = document.getElementById("class-pick") as HTMLElement;
 		if (j.status !== 'error')

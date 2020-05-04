@@ -47,7 +47,7 @@ function register() {
             err.innerHTML = "<p>" + obj.message + "</p>";
         }
         else {
-            // window.location.href = '/dashboard';
+            err.innerHTML = "<p>Success! Please login</p>";
         }
     });
 }
@@ -74,7 +74,7 @@ function setupDashboardCalendar() {
 }
 function updateCalendar() {
     return __awaiter(this, void 0, void 0, function* () {
-        var resp = yield postData('/user/' + userId + '/calendar', {});
+        var resp = yield postData('/api/calendar', {});
         var obj = yield resp.json();
         if (obj.status != 'success') {
             console.error('Failed to poll calendar');
@@ -93,8 +93,11 @@ function updateCalendar() {
 }
 function updateAssignments() {
     return __awaiter(this, void 0, void 0, function* () {
-        var resp = yield postData('/user/' + userId + '/assignment/all', {});
+        var resp = yield postData('/api/assignment/all', {});
         var obj = yield resp.json();
+        if (obj.status == 'unauthorized') {
+            window.location.href = '/';
+        }
         if (obj.status != 'success') {
             console.error('Failed to poll assignments');
             return;
