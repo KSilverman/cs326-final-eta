@@ -62,7 +62,7 @@ export class Database {
         new: true
       }
     );
-    
+
     return seqDoc.value.seqValue;
   }
 
@@ -95,8 +95,6 @@ export class Database {
         upsert: true
       }
     );
-
-    console.log('Put user id ' + user.id);
   }
 
   public async getUser(id : number) : Promise<User> {
@@ -112,5 +110,26 @@ export class Database {
     let user : User = new User(res.id, res.username, res.hash);
 
     return user;
+  }
+
+  public async getUserByName(username : string) : Promise<User | null> {
+    if (!username) return null;
+    
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('users');
+
+    try {
+      let res = await collection.findOne(
+        {
+          username: username,
+        }
+      );
+
+      let user : User = new User(res.id, res.username, res.hash);
+
+      return user;
+    } catch (e) {
+      return null;
+    }
   }
 }

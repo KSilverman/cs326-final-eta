@@ -4,23 +4,47 @@ var userId = 11; // temp
 
 function login(){
     (async() => {
-        let emailField = document.getElementById("emailaddress") as HTMLInputElement;
-        let email = emailField.value;
+        let usernameField = document.getElementById("username") as HTMLInputElement;
+        let username = usernameField.value;
 
         let pwfield = document.getElementById("password") as HTMLInputElement;
         let pw = pwfield.value;
 
-        const login = {'email':email, 'password':pw}
-        const newURL = url + "/users/login";
+        const login = {'name':username, 'password':pw}
+        const newURL = url + "/user/login";
         const resp = await postData(newURL, login);
+        console.log(resp)
         const j = await resp.json()
         if (j['status'] == 'failed'){
             let err = document.getElementById("errorlogin") as HTMLElement;
-            err.innerHTML = "<p>Login failed!</p>";
+            err.innerHTML = "<p>" + j.message + "</p>";
         } else{
             window.location.href = url + "/dashboard";
         }
     })();
+}
+
+async function register() : Promise<void> {
+  let usernameElement = document.getElementById("username") as HTMLInputElement;
+  let passwordElement = document.getElementById("password") as HTMLInputElement;
+  let username : string = usernameElement.value;
+  let password : string = passwordElement.value;
+
+  let data = {
+    name: username,
+    password: password
+  }
+
+  var resp = await postData('/user/register', data);
+  var obj = await resp.json()
+
+  let err = document.getElementById("errorlogin") as HTMLElement;
+
+  if (obj.status != 'success') {
+    err.innerHTML = "<p>" + obj.message + "</p>";
+  } else {
+    // window.location.href = '/dashboard';
+  }
 }
 
 var FullCalendar : any;
@@ -55,7 +79,7 @@ function setupDashboardCalendar() : void {
 }
 
 async function updateCalendar() : Promise<void> {
-  var resp = await postData('/user/' + userId + '/calendar', '');
+  var resp = await postData('/user/' + userId + '/calendar', {});
   var obj = await resp.json();
 
   if (obj.status != 'success') {
@@ -78,7 +102,8 @@ async function updateCalendar() : Promise<void> {
 }
 
 async function updateAssignments() : Promise<void> {
-  var resp = await postData('/user/' + userId + '/assignment/all', '');
+  var resp = await postData('/user/' + userId + '/assignment/all', {});
+
   var obj = await resp.json();
 
   if (obj.status != 'success') {
@@ -136,6 +161,7 @@ async function updateAssignments() : Promise<void> {
 
 // NEW: helper method for posting data
 async function postData(url : string, data : any) {
+  if (!data) data = {}
     const resp = await fetch(url,
                              {
                                  method: 'POST',

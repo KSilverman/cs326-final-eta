@@ -1,5 +1,7 @@
 const express = require('express')
 const path = require('path');
+const session = require('express-session')
+const uuid = require('uuid')
 
 import { User } from './types/user'
 import { Course } from './types/course'
@@ -24,6 +26,15 @@ export class Server {
 
   private CreateRouting() {
 
+    this.app.use(session({
+      genid: function(req : any) {
+        return uuid.v4()
+      },
+      secret: 'keyboard cat',
+      resave: false,
+      saveUninitialized: true
+    }))
+
     // express stuff
     this.app.get('/', (req : any, res : any) => {
       res.sendFile(path.join(__dirname + '/static/index.html'));
@@ -47,7 +58,7 @@ export class Server {
     this.app.use(express.json())
 
     this.app.post('/user/register', this.RequestRegister.bind(this))
-    this.app.post('/user/login', this.RequestLogin)
+    this.app.post('/user/login', this.RequestLogin.bind(this))
 
     // ???
     this.app.post('/user/:uid', this.RequestGetUser.bind(this))
@@ -84,6 +95,10 @@ export class Server {
     this.app.post('/user/:uid/calendar', this.RequestGetCalendar)
   }
 
+  private checkAuthorization(id1 : number, id2 : number) : boolean {
+    return (id1 == id2)
+  }
+
   // Requests
 
   private async RequestRegister(req : any, res : any) {
@@ -98,12 +113,22 @@ export class Server {
       let name = req.body.name;
       let hash = await User.createHash(req.body.password)
 
-      let user : User = await this.database.createUser(name, hash)
+      let existingUser = await this.database.getUserByName(name);
 
-      response = {
-        status: 'success',
-        user: await user.objectify()
-      };
+      if (existingUser != null) {
+        // username taken
+        response = {
+          status: 'failed',
+          message: 'Username is already in use'
+        };
+      } else {
+        let user : User = await this.database.createUser(name, hash)
+
+        response = {
+          status: 'success',
+          user: await user.objectify()
+        };
+      }
     } catch (e) {
       console.log(e)
       response = {
@@ -115,14 +140,29 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestLogin(req : any, res : any) {
-    var response = {
-      'status': 'failed',
-      'message': 'Incorrect username or password'
+  private async RequestLogin(req : any, res : any) {
+    var response : any = {
+      status: 'failed',
+      message: 'Incorrect username or password'
     }
 
     let name = req.body.name;
-    let password = req.body.password;
+    let hash = await User.createHash(req.body.password)
+
+    let user = await this.database.getUserByName(name)
+
+    console.log(user)
+
+    if (user != null) {
+      if (await user.checkHash(req.body.password)) {
+        // auth success
+        response.status = 'success';
+        response.user = await user.objectify();
+        response.message = '';
+
+        req.session.uid = user.id;
+      }
+    }
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
@@ -132,7 +172,9 @@ export class Server {
     var response;
     try {
       var uid = parseInt(req.params.uid)
-      if (!uid) throw new Error();
+
+      if (!uid || this.checkAuthorization(uid, req.session.uid)) throw new Error();
+
       let user : User = await this.database.getUser(uid)
 
       response = {
