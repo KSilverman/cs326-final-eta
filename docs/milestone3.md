@@ -2,16 +2,36 @@
 
 ## Milestone 3 - Database and Back-end ##
 
-# Part 1 - Database #
+### Database Structure ###
 
-What did we do for our database?
+Utilizing MongoDB, we have 5 collections; users, assignments, extracurriculars, exams, and courses. All are indexed by an incrementing unique id.
 
-# Part 2 - Back-end # 
+**Users**
 
-What significant back-end implementation did we make?
+*id*
+*name*
+*hash*
 
-# Part 3 - Depoloyment #
+**Exams**
 
-![Link to website on Heroku][heroku]
+*id*
+*uid*
+*name*
+*calendarData*
 
-[heroku]: linkgoeshere.com "Heroku deployment"
+**Courses**
+
+*id*
+*uid*
+*name
+*calendarData*
+
+**Extracurriculars**
+
+**Assignments**
+
+### Division of Labor ###
+
+Devon - express routing, user system, database structure; course, user, exam schema
+Artem - created extracurricular and assignment schema, getters/setters
+Kyle - created MongoDB server on heroku
