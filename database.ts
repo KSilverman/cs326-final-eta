@@ -7,7 +7,7 @@ export class Database {
   private MongoClient = require('mongodb').MongoClient;
   private client : any;
   private db : any;
-  private dbName : string = 'eta';
+  private dbName : string = 'heroku_vt43xv1g';
 
   constructor() {
 
@@ -16,7 +16,7 @@ export class Database {
   public async connect(url: string) : Promise<void> {
     return new Promise((resolve, reject) => {
 
-      this.client = new this.MongoClient(url);
+      this.client = new this.MongoClient(url, { useNewUrlParser: true });
 
       // this comes once we're actually gonna use a DB
       this.client.connect((err : any, db : any) => {
