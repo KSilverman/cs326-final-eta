@@ -1,4 +1,5 @@
 import { User } from './types/user'
+import { Exam } from './types/exam'
 
 export class Database {
   private MongoClient = require('mongodb').MongoClient;
@@ -66,6 +67,8 @@ export class Database {
     return seqDoc.value.seqValue;
   }
 
+  // Users
+
   private async getNextUserId() : Promise<number> {
     let id = await this.getSequenceNextValue('users')
     return id;
@@ -106,7 +109,6 @@ export class Database {
         id: id,
       }
     );
-
     let user : User = new User(res.id, res.username, res.hash);
 
     return user;
@@ -114,7 +116,7 @@ export class Database {
 
   public async getUserByName(username : string) : Promise<User | null> {
     if (!username) return null;
-    
+
     let db = this.client.db(this.dbName);
     let collection = db.collection('users');
 
@@ -130,6 +132,78 @@ export class Database {
       return user;
     } catch (e) {
       return null;
+    }
+  }
+
+  // Exams
+
+  private async getNextExamId() : Promise<number> {
+    let id = await this.getSequenceNextValue('exams')
+    return id;
+  }
+
+  public async createExam(uid : number, name : string, calendarData : object) : Promise<Exam> {
+    let id = await this.getNextExamId();
+
+    let exam : Exam = new Exam(id, uid, name, calendarData)
+    await this.putExam(exam);
+
+    return exam;
+  }
+
+  public async putExam(exam : Exam) : Promise<void> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('exams');
+
+    let res = await collection.updateOne(
+      {
+        id: exam.id,
+      },
+      {
+        $set : exam
+      },
+      {
+        upsert: true
+      }
+    );
+  }
+
+  public async getExam(id : number) : Promise<Exam> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('exams');
+
+    let res = await collection.findOne(
+      {
+        id: id,
+      }
+    );
+
+    let exam : Exam = new Exam(res.id, res.uid, res.name, res.calendarData)
+
+    return exam;
+  }
+
+  public async getExamsForUser(uid : number) : Promise<Exam[] | null> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('exams');
+
+    try {
+      let results = await collection.findMany(
+        {
+          uid: uid,
+        }
+      );
+
+      let exams = []
+
+      for (let res of results) {
+        let exam : Exam = new Exam(res.id, res.uid, res.name, res.calendarData)
+        exams.push(exam)
+      }
+
+      return exams;
+    } catch (e) {
+      return [];
     }
   }
 }

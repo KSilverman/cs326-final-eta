@@ -5,7 +5,7 @@ export class Exam {
   public name : string;
   public calendarData : object;
 
-  public Exam(id : number, uid : number, name : string, calendarData : object) {
+  constructor(id : number, uid : number, name : string, calendarData : object) {
     this.id = id;
     this.uid = uid;
     this.name = name;
@@ -14,10 +14,10 @@ export class Exam {
 
   public objectify() : object {
     return {
-      id: id,
-      uid: uid,
-      name: name,
-      calendarData: calendarData
+      id: this.id,
+      uid: this.uid,
+      name: this.name,
+      calendarData: this.calendarData
     }
   }
 }
