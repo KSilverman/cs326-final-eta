@@ -42,7 +42,7 @@ Utilizing MongoDB, we have 5 collections; users, assignments, extracurriculars, 
 
 *name*
 
-*cal\[endar\]Data*
+*calendarData*
 
 *note*
 
