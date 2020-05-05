@@ -241,71 +241,30 @@ export class Server {
   }
 
   private async RequestCreateCourse(req : any, res : any) {
-    var response;
-    try {
-      var uid : number = parseInt(req.params.uid)
-      console.log(uid)
-
-      response = this.CreateCourse(uid, new Course(uid, 0, "A New Course"))
-    } catch(e) {
-      response = {
-        'status': 'failed'
-      }
-    }
+    var response : object = {};
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
 
   private async RequestGetCourse(req : any, res : any) {
-    var response;
-    try {
-      var uid = parseInt(req.params.uid)
-      var id = parseInt(req.params.id)
-      if (!uid || !id) throw new Error();
+    var response : object = {};
 
-      response = this.GetCourse(uid, id)
-    } catch(e) {
-      response = {
-        'status': 'failed'
-      }
-    }
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
 
   private async RequestDeleteCourse(req : any, res : any) {
-    var response;
-    try {
-      var uid : number = parseInt(req.params.uid)
-      var id : number = parseInt(req.params.id)
-      if (!uid || !id) throw new Error();
-
-      response = this.DeleteCourse(uid, id)
-    } catch(e) {
-      response = {
-        'status': 'failed'
-      }
-    }
+    var response : object = {};
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
 
   private async RequestUpdateCourse(req : any, res : any) {
-    var response;
-    try {
-      var uid : number = parseInt(req.params.uid)
-      var id : number = parseInt(req.params.id)
-      if (!uid || !id) throw new Error();
+    var response : object = {};
 
-      response = this.UpdateCourse(uid, id, new Course(uid, id, "An Updated Course"))
-    } catch(e) {
-      response = {
-        'status': 'failed'
-      }
-    }
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
@@ -490,46 +449,5 @@ export class Server {
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
-  }
-
-  // Course
-
-  private async GetCourse(uid : number, id : number) {
-    var course = new Course(uid, id, "The Best Course Ever"); // flubbery
-
-    var response = {
-      'status': 'success',
-      'course': course
-    }
-
-    return response;
-  }
-
-  private async CreateCourse(uid : number, course : Course) {
-    course = new Course(uid, Math.floor(Math.random() * 100), "A Brand New Course"); // flubbery
-
-    var response = {
-      'status': 'success',
-      'course': course
-    }
-
-    return response;
-  }
-
-  private async UpdateCourse(uid : number, id : number, course : Course) {
-    var response = {
-      'status': 'success',
-      'course': course
-    }
-
-    return response;
-  }
-
-  private async DeleteCourse(uid : number, id : number) {
-    var response = {
-      'status': 'success'
-    }
-
-    return response;
   }
 }
