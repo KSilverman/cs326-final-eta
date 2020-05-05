@@ -36,7 +36,29 @@ Utilizing MongoDB, we have 5 collections; users, assignments, extracurriculars, 
 
 **Extracurriculars**
 
+*id*
+
+*uid*
+
+*name*
+
+*cal\[endar\]Data*
+
+*note*
+
 **Assignments**
+
+*id*
+
+*uid*
+
+*name*
+
+*classID*
+
+*note*
+
+*timeToCompletion*
 
 ### Division of Labor ###
 
