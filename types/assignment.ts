@@ -1,9 +1,9 @@
 export class Assignment {
     readonly id : number; // assignment ID
-    readonly name : string; // name of assignment
-    readonly class : number; // class
-    readonly note : string; // info about assignment
-    readonly ttc : number; // some date 
+    public name : string; // name of assignment
+    public class : number; // class
+    public note : string; // info about assignment
+    public ttc : number; // some date 
     readonly uid : number; // user id
     
     constructor(assName: string, assID: number,  classID: number, info: string, date: number, uid: number){

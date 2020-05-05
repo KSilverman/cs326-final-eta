@@ -1,7 +1,7 @@
 export class Extracurricular {
-    readonly calData : object[]; // Calendar data
-    readonly name : string; // What it is
-    readonly note : string; // Extra info 
+    public calData : object[]; // Calendar data
+    public name : string; // What it is
+    public note : string; // Extra info 
     readonly uid : number; // User ID
     readonly id : number; // Unique EC ID
     
