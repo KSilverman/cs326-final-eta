@@ -1,5 +1,7 @@
 import { User } from './types/user'
 import { Exam } from './types/exam'
+import { Extracurricular } from './types/extracurricular';
+import { Assignment } from './types/assignment';
 
 export class Database {
   private MongoClient = require('mongodb').MongoClient;
@@ -206,4 +208,150 @@ export class Database {
       return [];
     }
   }
+
+
+
+  // EXTRACURRICULARS
+
+  private async getNextECId() : Promise<number> {
+    let id = await this.getSequenceNextValue('extracurriculars')
+    return id;
+  }
+
+  public async createEC(uid : number, name : string, calendarData : object[], note : string) : Promise<Extracurricular> {
+    let id = await this.getNextECId();
+
+    let ec : Extracurricular = new Extracurricular(calendarData, name,note, id, uid);
+    await this.putEC(ec);
+
+    return ec;
+  }
+
+  public async putEC(ec : Extracurricular) : Promise<void> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('extracurriculars');
+
+    let res = await collection.updateOne(
+      {
+        id: ec.id,
+      },
+      {
+        $set : ec
+      },
+      {
+        upsert: true
+      }
+    );
+  }
+
+  public async getEC(id : number) : Promise<Extracurricular> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('extracurriculars');
+
+    let res = await collection.findOne(
+      {
+        id: id,
+      }
+    );
+
+    let ec : Extracurricular = new Extracurricular(res.times, res.name, res.note, res.uid, res.id);
+
+    return ec;
+  }
+
+  public async getECForUser(uid : number) : Promise<Extracurricular[] | null> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('extracurriculars');
+
+    try {
+      let results = await collection.findMany(
+        {
+          uid: uid,
+        }
+      );
+
+      let extracurriculars = []
+
+      for (let res of results) {
+        let ec : Extracurricular = new Extracurricular(res.times, res.name, res.note, res.uid, res.id);
+        extracurriculars.push(ec)
+      }
+
+      return extracurriculars;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // ASSIGNMENTS
+  private async getNextAssignmentId() : Promise<number> {
+    let id = await this.getSequenceNextValue('assignments')
+    return id;
+  }
+
+  public async createAssignment(name : string, uid : number, classID : number, date : number, note : string) : Promise<Assignment> {
+    let id = await this.getNextECId();
+
+    let ass : Assignment = new Assignment(name, id, classID, note, date, uid);
+    await this.putAssignment(ass);
+
+    return ass;
+  }
+
+  public async putAssignment(ass : Assignment) : Promise<void> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('assignments');
+
+    let res = await collection.updateOne(
+      {
+        id: ass.id,
+      },
+      {
+        $set : ass
+      },
+      {
+        upsert: true
+      }
+    );
+  }
+
+  public async getAss(id : number) : Promise<Assignment> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('assignments');
+
+    let res = await collection.findOne(
+      {
+        id: id,
+      }
+    );
+
+    let ass : Assignment = new Assignment(res.assignmentName, res.assignmentID, res.course, res.notes, res.timeToComplete, res.uid);
+
+    return ass;
+  }
+
+  public async getAssignmentForUser(uid : number) : Promise<Assignment[] | null> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('assignments');
+
+    try {
+      let results = await collection.findMany(
+        {
+          uid: uid,
+        }
+      );
+
+      let assignments = []
+
+      for (let res of results) {
+        let ass : Assignment = new Assignment(res.assignmentName, res.assignmentID, res.course, res.notes, res.timeToComplete, res.uid);
+        assignments.push(ass)
+      }
+
+      return assignments;
+    } catch (e) {
+      return [];
+    }
+  }
+  
 }

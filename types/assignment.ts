@@ -1,10 +1,10 @@
 export class Assignment {
-    private id : number; // assignment ID
-    private name : string; // name of assignment
-    private class : number; // class
-    private note : string; // info about assignment
-    private ttc : number; // some date 
-    private uid : number; // user id
+    readonly id : number; // assignment ID
+    readonly name : string; // name of assignment
+    readonly class : number; // class
+    readonly note : string; // info about assignment
+    readonly ttc : number; // some date 
+    readonly uid : number; // user id
     
     constructor(assName: string, assID: number,  classID: number, info: string, date: number, uid: number){
         this.id = assID;
@@ -19,8 +19,8 @@ export class Assignment {
         return {
             'assingmentID' : this.id,
             'assignmentName': this.name,
-            'assignmentClass': this.class,
-            'expected TTC': this.ttc,
+            'course': this.class,
+            'timeToComplete': this.ttc,
             'notes': this.note,
             'uid': this.uid
         };
