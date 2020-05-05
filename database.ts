@@ -183,7 +183,7 @@ export class Database {
     return exam;
   }
 
-  public async getExamsForUser(uid : number) : Promise<Exam[] | null> {
+  public async getExamsForUser(uid : number) : Promise<Exam[]> {
     let db = this.client.db(this.dbName);
     let collection = db.collection('exams');
 

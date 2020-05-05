@@ -4,7 +4,12 @@ const session = require('express-session')
 const uuid = require('uuid')
 
 import { User } from './types/user'
+
 import { Course } from './types/course'
+import { Exam } from './types/exam'
+import { Assignment } from './types/assignment'
+import { Extracurricular } from './types/extracurricular'
+
 import { Database } from './database'
 
 export class Server {
@@ -202,7 +207,11 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetAllCourses(req : any, res : any) {
+
+
+
+
+  private async RequestGetAllCourses(req : any, res : any) {
     var _uid = this.validateSessionAndGetUID(req)
     if (_uid == null) {
       res.end(JSON.stringify({status: 'unauthorized'}));
@@ -231,7 +240,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestCreateCourse(req : any, res : any) {
+  private async RequestCreateCourse(req : any, res : any) {
     var response;
     try {
       var uid : number = parseInt(req.params.uid)
@@ -248,7 +257,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetCourse(req : any, res : any) {
+  private async RequestGetCourse(req : any, res : any) {
     var response;
     try {
       var uid = parseInt(req.params.uid)
@@ -266,7 +275,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestDeleteCourse(req : any, res : any) {
+  private async RequestDeleteCourse(req : any, res : any) {
     var response;
     try {
       var uid : number = parseInt(req.params.uid)
@@ -284,7 +293,7 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestUpdateCourse(req : any, res : any) {
+  private async RequestUpdateCourse(req : any, res : any) {
     var response;
     try {
       var uid : number = parseInt(req.params.uid)
@@ -302,7 +311,11 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetAllAssignments(req : any, res : any) {
+
+
+
+
+  private async RequestGetAllAssignments(req : any, res : any) {
     var response = {
       status: 'success',
       categories: [
@@ -352,89 +365,127 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private RequestGetAssignment(req : any, res : any) {
+  private async RequestGetAssignment(req : any, res : any) {
 
   }
 
-  private RequestCreateAssignment(req : any, res : any) {
+  private async RequestCreateAssignment(req : any, res : any) {
 
   }
 
-  private RequestDeleteAssignment(req : any, res : any) {
+  private async RequestDeleteAssignment(req : any, res : any) {
 
   }
 
-  private RequestUpdateAssignment(req : any, res : any) {
+  private async RequestUpdateAssignment(req : any, res : any) {
 
   }
 
-  private RequestGetAllExams(req : any, res : any) {
+
+
+
+
+  private async RequestGetAllExams(req : any, res : any) {
 
   }
 
-  private RequestGetExam(req : any, res : any) {
+  private async RequestGetExam(req : any, res : any) {
+    var response : object;
+
+    try {
+      let id = req.body.id;
+      let uid = req.session.uid;
+
+      let exam : Exam = await this.database.getExam(id)
+
+      if (!this.checkAuthorization(exam.uid, uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+        response = {
+          status: 'success',
+          exam: exam.objectify()
+        };
+      }
+    } catch (e) {
+      response = {
+        status: 'error',
+        error: e.message
+      }
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
+  }
+
+  private async RequestCreateExam(req : any, res : any) {
 
   }
 
-  private RequestCreateExam(req : any, res : any) {
+  private async RequestDeleteExam(req : any, res : any) {
 
   }
 
-  private RequestDeleteExam(req : any, res : any) {
+  private async RequestUpdateExam(req : any, res : any) {
 
   }
 
-  private RequestUpdateExam(req : any, res : any) {
+
+
+
+
+  private async RequestGetAllExtracurriculars(req : any, res : any) {
 
   }
 
-  private RequestGetAllExtracurriculars(req : any, res : any) {
+  private async RequestGetExtracurricular(req : any, res : any) {
 
   }
 
-  private RequestGetExtracurricular(req : any, res : any) {
+  private async RequestCreateExtracurricular(req : any, res : any) {
 
   }
 
-  private RequestCreateExtracurricular(req : any, res : any) {
+  private async RequestDeleteExtracurricular(req : any, res : any) {
 
   }
 
-  private RequestDeleteExtracurricular(req : any, res : any) {
+  private async RequestUpdateExtracurricular(req : any, res : any) {
 
   }
 
-  private RequestUpdateExtracurricular(req : any, res : any) {
 
-  }
 
-  private RequestGetCalendar(req : any, res : any) {
+
+
+  private async RequestGetCalendar(req : any, res : any) {
+
+    let uid = req.session.uid;
+
+    let calendarEvents = [];
+
+    let exams            = await this.database.getExamsForUser(uid);
+    // let extracurriculars = await this.database.getExtracurricularsForUser(uid);
+    // let assignments      = await this.database.getAssignmentsForUser(uid);
+    // let courses          = await this.database.getCoursesForUser(uid);
+
+    for (let exam of exams) {
+      let calendarEntry = {
+        type: 'exam',
+        id: exam.id,
+        event: exam.calendarData
+      }
+
+      calendarEvents.push(calendarEntry)
+    }
+
+    // TODO : extra
+    // TODO : assign
+    // TODO : coures
+
     var response = {
-      'status': 'success',
-      'calendar': [
-        {
-          'type': 'course',
-          'id': 1,
-          'event': {
-  					title: 'CS 326 Lecture',
-  					daysOfWeek: [2, 4],
-  					startTime: '16:00',
-  					endTime: '17:15',
-  					endRecur: '2020-04-29'
-  				}
-        },
-        {
-          'type': 'course',
-          'id': 1,
-          'event': {
-  					title: 'CS 326 Discussion',
-  					daysOfWeek: [1],
-  					startTime: '16:00',
-  					endTime: '17:15',
-  					endRecur: '2020-04-29'
-  				}
-        }
-      ]
+      status: 'success',
+      calendar: exams
     };
 
     res.setHeader('Content-Type', 'application/json');
@@ -443,7 +494,7 @@ export class Server {
 
   // Course
 
-  private GetCourse(uid : number, id : number) {
+  private async GetCourse(uid : number, id : number) {
     var course = new Course(uid, id, "The Best Course Ever"); // flubbery
 
     var response = {
@@ -454,7 +505,7 @@ export class Server {
     return response;
   }
 
-  private CreateCourse(uid : number, course : Course) {
+  private async CreateCourse(uid : number, course : Course) {
     course = new Course(uid, Math.floor(Math.random() * 100), "A Brand New Course"); // flubbery
 
     var response = {
@@ -465,7 +516,7 @@ export class Server {
     return response;
   }
 
-  private UpdateCourse(uid : number, id : number, course : Course) {
+  private async UpdateCourse(uid : number, id : number, course : Course) {
     var response = {
       'status': 'success',
       'course': course
@@ -474,7 +525,7 @@ export class Server {
     return response;
   }
 
-  private DeleteCourse(uid : number, id : number) {
+  private async DeleteCourse(uid : number, id : number) {
     var response = {
       'status': 'success'
     }
