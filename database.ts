@@ -34,7 +34,7 @@ export class Database {
 
   private async init() : Promise<void> {
     let db = this.client.db(this.dbName);
-    let collections = ["users"];
+    let collections = ['users', 'exams', 'extracurriculars', 'assignments'];
     for (var collectionName of collections) {
       var seqDoc = await db.collection(collectionName).findOneAndUpdate(
         {
