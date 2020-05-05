@@ -4,13 +4,15 @@ export class Assignment {
     private class : number; // class
     private note : string; // info about assignment
     private ttc : number; // some date 
+    private uid : number; // user id
     
-    constructor(assName: string, assID: number,  classID: number, info: string, date: number){
+    constructor(assName: string, assID: number,  classID: number, info: string, date: number, uid: number){
         this.id = assID;
         this.name = assName;
         this.class = classID;
         this.note = info;
         this.ttc = date;
+        this.uid = uid;
     }
   
     public async objectify() : Promise<any> {
@@ -19,7 +21,8 @@ export class Assignment {
             'assignmentName': this.name,
             'assignmentClass': this.class,
             'expected TTC': this.ttc,
-            'notes': this.note
+            'notes': this.note,
+            'uid': this.uid
         };
       }
 }
