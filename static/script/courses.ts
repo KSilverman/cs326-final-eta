@@ -1,33 +1,21 @@
 //const url = "http://localhost:80/";
 
-/*async function postData(url: string, data: string) {
-    const resp = await fetch(url,
-                             {
-                                 method: 'POST',
-                                 mode: 'cors',
-                                 cache: 'no-cache',
-                                 credentials: 'same-origin',
-                                 headers: {
-                                     'Content-Type': 'application/json'
-                                 },
-                                 redirect: 'follow',
-                                 body: JSON.stringify(data)
-                             });
-    return resp;
-}*/
-
 async function getCourses(uuid: any) : Promise<void>
 {
 	(async () => {
 		const data = {uid: uuid};
-		const newURL = `/api/course/all`;
+		const newURL = '/api/course/all';
 		console.log("Sending courses request to " + newURL);
 		const resp = await postData(newURL, data);
 
+		console.log(resp)
+
 		const j = await resp.json();
 
+		console.log(j)
+
 		if (j.status == 'unauthorized') {
-			window.location.href = '/'
+			//window.location.href = '/'
 			return;
 		}
 

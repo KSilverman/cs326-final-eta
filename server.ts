@@ -61,7 +61,14 @@ export class Server {
     // API stuff
 
     this.app.use(express.json())
-
+    /*
+    this.app.use(function (req : any, res : any, next : any) {
+      if (!req.session.uid) {
+        req.session.uid = {};
+        console.log(req.session);
+     }
+   });
+*/
     this.app.post('/user/register', this.RequestRegister.bind(this))
     this.app.post('/user/login', this.RequestLogin.bind(this))
 
@@ -98,6 +105,7 @@ export class Server {
 
     // CALENDAR
     this.app.post('/api/calendar', this.RequestGetCalendar.bind(this))
+
   }
 
   private checkAuthorization(id1 : number, id2 : number) : boolean {
@@ -105,10 +113,12 @@ export class Server {
   }
 
   private validateSessionAndGetUID(req : any) : number | null {
-    console.log(req.session)
-    if (req.session.uid) {
+    console.log(req.session);
+    if (req.session.uid !== null) {
+      console.log("good")
       return req.session.uid
     } else {
+      console.log("bad")
       return null;
     }
   }
@@ -207,13 +217,11 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-
-
-
-
   private async RequestGetAllCourses(req : any, res : any) {
-    var _uid = this.validateSessionAndGetUID(req)
-    if (_uid == null) {
+    //console.log(req);
+    var user_uid = parseInt(req.params.uid)
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null || !this.checkAuthorization(req.session.uid, user_uid)) {
       res.end(JSON.stringify({status: 'unauthorized'}));
       return;
     }
@@ -269,10 +277,6 @@ export class Server {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
-
-
-
-
 
   private async RequestGetAllAssignments(req : any, res : any) {
     var response = {
@@ -340,10 +344,6 @@ export class Server {
 
   }
 
-
-
-
-
   private async RequestGetAllExams(req : any, res : any) {
 
   }
@@ -389,10 +389,6 @@ export class Server {
 
   }
 
-
-
-
-
   private async RequestGetAllExtracurriculars(req : any, res : any) {
 
   }
@@ -413,17 +409,13 @@ export class Server {
 
   }
 
-
-
-
-
   private async RequestGetCalendar(req : any, res : any) {
 
     let uid = req.session.uid;
 
     let calendarEvents = [];
 
-    let exams            = await this.database.getExamsForUser(uid);
+    let exams = await this.database.getExamsForUser(uid);
     // let extracurriculars = await this.database.getExtracurricularsForUser(uid);
     // let assignments      = await this.database.getAssignmentsForUser(uid);
     // let courses          = await this.database.getCoursesForUser(uid);
