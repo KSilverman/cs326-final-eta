@@ -16,7 +16,10 @@ function login(){
         console.log(resp)
         const j = await resp.json()
         if (j['status'] == 'failed'){
-            let err = document.getElementById("errorlogin") as HTMLElement;
+            let err = document.getElementById("login_resp") as HTMLElement;
+            err.className = "";
+            err.classList.add("alert");
+            err.classList.add("alert-danger");
             err.innerHTML = "<p>" + j.message + "</p>";
         } else{
             window.location.href = url + "/dashboard";
@@ -38,12 +41,21 @@ async function register() : Promise<void> {
   var resp = await postData('/user/register', data);
   var obj = await resp.json()
 
-  let err = document.getElementById("errorlogin") as HTMLElement;
+  let err = document.getElementById("login_resp") as HTMLElement;
 
-  if (obj.status != 'success') {
+  if (obj.status != 'success') 
+  {
+    err.className = "";
+    err.classList.add("alert");
+    err.classList.add("alert-danger");
     err.innerHTML = "<p>" + obj.message + "</p>";
-  } else {
-    err.innerHTML = "<p>Success! Please login</p>";
+  } 
+  else 
+  {
+    err.className = "";
+    err.classList.add("alert");
+    err.classList.add("alert-success");
+    err.innerHTML = "<p>Registration successful! Please login</p>";
   }
 }
 
@@ -104,7 +116,11 @@ async function updateCalendar() : Promise<void> {
 async function updateAssignments() : Promise<void> {
   var resp = await postData('/api/assignment/all', {});
 
+  console.log(resp);
+
   var obj = await resp.json();
+
+  console.log(obj);
 
   if (obj.status == 'unauthorized') {
     window.location.href = '/'
@@ -118,6 +134,20 @@ async function updateAssignments() : Promise<void> {
   var categories = obj.categories;
 
   var html : string = '';
+
+/*
+  let assignments_input = [];
+
+  for(let cat of categories)
+  {
+    for(let ass of assignments)
+    {
+        assignments_input.push(ass);
+    }
+  }
+
+  let ordered_assignments = getOrderedAssignmentsWithCats(assignments_input);
+  */
 
   for (var category of categories) {
     var title : string = category.title;
@@ -162,6 +192,19 @@ async function updateAssignments() : Promise<void> {
   let assignmentContainer = document.getElementById("assignments") as HTMLElement;
   assignmentContainer.innerHTML = html;
 }
+/*
+function getOrderedAssignmentsWithCats(list : any[]) : any[]
+{
+  let ordered_list : any[] = [];
+
+  for(let i : number = 0; i < list.length; i++)
+  {
+      //TODO: Order assignment list
+  }
+
+  return ordered_list;
+}
+*/
 
 // NEW: helper method for posting data
 async function postData(url : string, data : any) {

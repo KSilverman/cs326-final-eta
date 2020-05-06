@@ -8,31 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-/*async function postData(url: string, data: string) {
-    const resp = await fetch(url,
-                             {
-                                 method: 'POST',
-                                 mode: 'cors',
-                                 cache: 'no-cache',
-                                 credentials: 'same-origin',
-                                 headers: {
-                                     'Content-Type': 'application/json'
-                                 },
-                                 redirect: 'follow',
-                                 body: JSON.stringify(data)
-                             });
-    return resp;
-}*/
 function getCourses(uuid) {
     return __awaiter(this, void 0, void 0, function* () {
         (() => __awaiter(this, void 0, void 0, function* () {
             const data = { uid: uuid };
-            const newURL = `/api/course/all`;
+            const newURL = '/api/course/all';
             console.log("Sending courses request to " + newURL);
             const resp = yield postData(newURL, data);
+            console.log(resp);
             const j = yield resp.json();
+            console.log(j);
             if (j.status == 'unauthorized') {
-                window.location.href = '/';
+                //window.location.href = '/'
                 return;
             }
             let course_list = document.getElementById("courses");

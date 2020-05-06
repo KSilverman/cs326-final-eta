@@ -22,7 +22,10 @@ function login() {
         console.log(resp);
         const j = yield resp.json();
         if (j['status'] == 'failed') {
-            let err = document.getElementById("errorlogin");
+            let err = document.getElementById("login_resp");
+            err.className = "";
+            err.classList.add("alert");
+            err.classList.add("alert-danger");
             err.innerHTML = "<p>" + j.message + "</p>";
         }
         else {
@@ -42,12 +45,18 @@ function register() {
         };
         var resp = yield postData('/user/register', data);
         var obj = yield resp.json();
-        let err = document.getElementById("errorlogin");
+        let err = document.getElementById("login_resp");
         if (obj.status != 'success') {
+            err.className = "";
+            err.classList.add("alert");
+            err.classList.add("alert-danger");
             err.innerHTML = "<p>" + obj.message + "</p>";
         }
         else {
-            err.innerHTML = "<p>Success! Please login</p>";
+            err.className = "";
+            err.classList.add("alert");
+            err.classList.add("alert-success");
+            err.innerHTML = "<p>Registration successful! Please login</p>";
         }
     });
 }
@@ -94,7 +103,9 @@ function updateCalendar() {
 function updateAssignments() {
     return __awaiter(this, void 0, void 0, function* () {
         var resp = yield postData('/api/assignment/all', {});
+        console.log(resp);
         var obj = yield resp.json();
+        console.log(obj);
         if (obj.status == 'unauthorized') {
             window.location.href = '/';
         }
@@ -104,6 +115,19 @@ function updateAssignments() {
         }
         var categories = obj.categories;
         var html = '';
+        /*
+          let assignments_input = [];
+        
+          for(let cat of categories)
+          {
+            for(let ass of assignments)
+            {
+                assignments_input.push(ass);
+            }
+          }
+        
+          let ordered_assignments = getOrderedAssignmentsWithCats(assignments_input);
+          */
         for (var category of categories) {
             var title = category.title;
             var assignments = category.assignments;
@@ -141,6 +165,19 @@ function updateAssignments() {
         assignmentContainer.innerHTML = html;
     });
 }
+/*
+function getOrderedAssignmentsWithCats(list : any[]) : any[]
+{
+  let ordered_list : any[] = [];
+
+  for(let i : number = 0; i < list.length; i++)
+  {
+      //TODO: Order assignment list
+  }
+
+  return ordered_list;
+}
+*/
 // NEW: helper method for posting data
 function postData(url, data) {
     return __awaiter(this, void 0, void 0, function* () {
