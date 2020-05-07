@@ -72,3 +72,27 @@ async function getCourses() : Promise<void>
 	    course_list.innerHTML = '<li class="list-group-item d-flex justify-content-between"> <b>Error Fetching Courses</b></li>';
 	}
 }
+
+async function createCourse(name : string) {
+	let payload : object = {
+    name: name
+  }
+
+  var resp = await postData('/api/course/create', payload);
+
+  let obj = await resp.json()
+	console.log(obj)
+
+  if (obj.status == 'success') {
+		getCourses()
+  }
+}
+
+function createCourseButton() {
+  let nameElement = document.getElementById('class-name') as HTMLInputElement;
+  let name = nameElement.value;
+
+	if (name) {
+		createCourse(name)
+	}
+}

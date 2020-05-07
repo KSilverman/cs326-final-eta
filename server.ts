@@ -226,29 +226,63 @@ export class Server {
     }
     var uid : number = _uid;
 
-    var response = {
-      status: 'success',
-      courses: [
-        {
-          title: 'CS 326',
-          id: 1
-        },
-        {
-          title: 'CS 373',
-          id: 2
-        },
-        {
-          title: 'CS 589',
-          id: 3
-        }
-      ]
+    let response;
+
+    try {
+      let courses : Course[] = await this.database.getCoursesForUser(uid)
+
+      response = {
+        status: 'success',
+        courses: courses.map((x) => x.objectify())
+      }
+
+    } catch (e) {
+      response = {
+        status: 'error',
+        message: e.message
+      }
     }
+
+
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
 
   private async RequestCreateCourse(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
+
     var response : object = {};
+
+    try {
+
+      let name = req.body.name;
+
+      if (name) {
+        let course : Course = await this.database.createCourse(uid, name, [])
+
+        response = {
+          status: 'success',
+          course: await course.objectify()
+        }
+
+      } else {
+        response = {
+          status: 'error',
+          message: 'Invalid name'
+        }
+      }
+
+    } catch (e) {
+      response = {
+        status: 'error',
+        message: e.message
+      }
+    }
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
