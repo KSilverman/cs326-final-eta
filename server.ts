@@ -415,7 +415,42 @@ export class Server {
   }
 
   private async RequestDeleteAssignment(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+
+    try {
+      var id : number = parseInt(req.params.id)
+
+      let assignment = await this.database.getAssignment(id);
+
+      if (assignment == null || !this.checkAuthorization(uid, assignment.uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+        await this.database.deleteAssignment(id)
+        response = {
+          status: 'success',
+          assignment: await assignment.objectify()
+        }
+      }
+
+
+    } catch (e) {
+      response = {
+        status: 'failed',
+        message: e.message
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestUpdateAssignment(req : any, res : any) {

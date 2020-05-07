@@ -9,7 +9,9 @@ export class Assignment {
     public due : number; // due date, UTC
     public ttc : number; // some date
 
-    constructor(id : number, uid : number, name : string, courseId : number, due : number, note : string, ttc : number){
+    public completed : boolean;
+
+    constructor(id : number, uid : number, name : string, courseId : number, due : number, note : string, ttc : number, completed : boolean){
         this.id = id;
         this.uid = uid;
         this.courseId = courseId;
@@ -19,6 +21,8 @@ export class Assignment {
 
         this.due = due;
         this.ttc = ttc;
+
+        this.completed = completed;
     }
 
     public async objectify() : Promise<any> {
@@ -31,7 +35,9 @@ export class Assignment {
         note: this.note,
 
         due: this.due,
-        ttc: this.ttc
+        ttc: this.ttc,
+
+        completed: this.completed
       };
     }
 }

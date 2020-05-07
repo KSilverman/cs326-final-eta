@@ -193,7 +193,9 @@ async function updateAssignments() : Promise<void> {
       html += '<td>' + dueDateStr + '</td>'
       html += '<td>' + expectedTTC + '</td>'
       html += '<td>' + notes + '</td>'
-      html += '<td><button type="button" class="btn btn-success btn-sm" title="Completed">&#10004;</button><button type="button" class="btn btn-primary btn-sm" title="Edit">&#9997;</button><button type="button" class="btn btn-danger btn-sm" title="Remove">&#10006;</button></td></tr>';
+      html += '<td><button type="button" class="btn btn-success btn-sm" title="Completed">&#10004;</button>';
+      html += '<button type="button" class="btn btn-primary btn-sm" title="Edit">&#9997;</button>';
+      html += '<button type="button" class="btn btn-danger btn-sm" title="Remove" onclick="deleteAssignmentButton(' + assignment.id + ')">&#10006;</button></td></tr>';
     }
 
     html += '</tbody></table></div></div>';
@@ -235,12 +237,24 @@ async function createAssignment(name : string, due : number, ttc : number, cours
     note: notes
   }
 
-  console.log(payload)
-
   var resp = await postData('/api/assignment/create', payload);
 
   let obj = await resp.json()
-  console.log(obj)
+
+  if (obj.status == 'success') {
+    // TODO this is bad?
+    updateAssignments()
+  }
+}
+
+function deleteAssignmentButton(id : number) {
+  deleteAssignment(id);
+}
+
+async function deleteAssignment(id : number) {
+  var resp = await postData('/api/assignment/' + id + '/delete', {});
+
+  let obj = await resp.json()
 
   if (obj.status == 'success') {
     // TODO this is bad?
