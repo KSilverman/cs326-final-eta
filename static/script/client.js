@@ -147,7 +147,7 @@ function updateAssignments() {
                 console.log(assignment);
                 var assignmentTitle = assignment.name;
                 var courseId = assignment.course;
-                var course = 'Course id ' + courseId;
+                var course = yield getCourseName(courseId);
                 var dueDate = assignment.due;
                 var expectedTTC = assignment.ttc;
                 var notes = assignment.note;
