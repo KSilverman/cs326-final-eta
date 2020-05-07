@@ -219,9 +219,8 @@ export class Server {
 
   private async RequestGetAllCourses(req : any, res : any) {
     //console.log(req);
-    var user_uid = parseInt(req.params.uid)
     var _uid = this.validateSessionAndGetUID(req);
-    if (_uid == null || !this.checkAuthorization(req.session.uid, user_uid)) {
+    if (_uid == null || !this.checkAuthorization(req.session.uid, _uid)) {
       res.end(JSON.stringify({status: 'unauthorized'}));
       return;
     }
@@ -279,50 +278,32 @@ export class Server {
   }
 
   private async RequestGetAllAssignments(req : any, res : any) {
-    var response = {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null || !this.checkAuthorization(req.session.uid, _uid)) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
+
+    let assignments = await this.database.getAssignmentsForUser(uid);
+
+    // TODO sort, categories
+
+    let categories = [];
+
+    let mainCategory : any = {title: 'All', assignments:[]};
+
+    for (let assignment of assignments) {
+      mainCategory.assignments.push(await assignment.objectify());
+
+    }
+
+    categories.push(mainCategory)
+
+
+    var response : object = {
       status: 'success',
-      categories: [
-        {
-          title: 'Today',
-          assignments: [
-            {
-              title: 'Milestone 2',
-              course: {
-                title: 'CS 326',
-                id: 7
-              },
-              dueDate: '4/24/2020',
-              expectedTTC: '4 hours',
-              notes: 'Important to start early!'
-            }
-          ]
-        },
-        {
-          title: 'Tomorrow',
-          assignments: [
-            {
-              title: 'Milestone 3',
-              course: {
-                title: 'CS 326',
-                id: 7
-              },
-              dueDate: '4/25/2020',
-              expectedTTC: '4 hours',
-              notes: 'Important to start earlier!'
-            },
-            {
-              title: 'Milestone 4',
-              course: {
-                title: 'CS 326',
-                id: 7
-              },
-              dueDate: '4/30/2020',
-              expectedTTC: '40 hours',
-              notes: 'Important to start earlier!'
-            }
-          ]
-        }
-      ]
+      categories: categories
     };
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))

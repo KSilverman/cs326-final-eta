@@ -1,28 +1,37 @@
 export class Assignment {
     readonly id : number; // assignment ID
-    public name : string; // name of assignment
-    public class : number; // class
-    public note : string; // info about assignment
-    public ttc : number; // some date 
     readonly uid : number; // user id
-    
-    constructor(assName: string, assID: number,  classID: number, info: string, date: number, uid: number){
-        this.id = assID;
-        this.name = assName;
-        this.class = classID;
-        this.note = info;
-        this.ttc = date;
+    public classId : number; // class
+
+    public name : string; // name of assignment
+    public note : string; // info about assignment
+
+    public due : number; // due date, UTC
+    public ttc : number; // some date
+
+    constructor(id : number, uid : number, name : string, classId : number, due : number, note : string, ttc : number){
+        this.id = id;
         this.uid = uid;
+        this.classId = classId;
+
+        this.name = name;
+        this.note = note;
+
+        this.due = due;
+        this.ttc = ttc;
     }
-  
+
     public async objectify() : Promise<any> {
-        return {
-            'assingmentID' : this.id,
-            'assignmentName': this.name,
-            'course': this.class,
-            'timeToComplete': this.ttc,
-            'notes': this.note,
-            'uid': this.uid
-        };
-      }
+      return {
+        id: this.id,
+        uid: this.uid,
+        class: this.classId,
+
+        name: this.name,
+        note: this.note,
+
+        due: this.due,
+        ttc: this.ttc
+      };
+    }
 }
