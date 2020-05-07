@@ -591,7 +591,8 @@ export class Server {
           title: assignment.name,
           start: startTime,
           end: startTime + assignment.ttc,
-          color: colors[assignment.courseId]
+          backgroundColor: colors[assignment.courseId] + '44',
+          borderColor: colors[assignment.courseId]
         }
       }
 
