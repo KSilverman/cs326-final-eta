@@ -287,18 +287,85 @@ export class Server {
 
     let assignments = await this.database.getAssignmentsForUser(uid);
 
+    assignments.sort((a, b) => {
+      return a.due - b.due
+    })
+
+    let now = Date.now()
+    let today = new Date()
+
+    let todayEnd = new Date()
+    todayEnd.setHours(24)
+    todayEnd.setMinutes(0)
+    todayEnd.setSeconds(0)
+    todayEnd.setMilliseconds(0)
+
+    let todayEndTime = todayEnd.getTime()
+
+    let tomorrowEnd = new Date(today)
+    tomorrowEnd.setHours(24)
+    tomorrowEnd.setMinutes(0)
+    tomorrowEnd.setSeconds(0)
+    tomorrowEnd.setMilliseconds(0)
+    tomorrowEnd.setDate(today.getDate() + 1)
+
+    console.log(tomorrowEnd.getTime())
+
+    let tomorrowEndTime = tomorrowEnd.getTime()
+
+    let thisWeekEnd = new Date(today);
+    thisWeekEnd.setDate(today.getDate() + 7);
+    thisWeekEnd.setHours(0)
+    thisWeekEnd.setSeconds(0)
+
+    let thisWeekEndTime = thisWeekEnd.getTime()
+
     // TODO sort, categories
 
-    let categories = [];
+    let categoryData : any = [
+      {
+        title: 'Late',
+        threshold: 0
+      },
+      {
+        title: 'Today',
+        threshold: now
+      },
+      {
+        title: 'Tomorrow',
+        threshold: todayEndTime
+      },
+      {
+        title: 'This Week',
+        threshold: tomorrowEndTime
+      },
+      {
+        title: 'Happily Ever After',
+        threshold: thisWeekEndTime
+      }
+    ];
+    let currentCategory = 0;
 
-    let mainCategory : any = {title: 'All', assignments:[]};
+    let categories = [];
+    let category: any = {title: categoryData[currentCategory].title, assignments: []}
 
     for (let assignment of assignments) {
-      mainCategory.assignments.push(await assignment.objectify());
+      let due = assignment.due;
+
+      while (currentCategory + 1 < categoryData.length && due >= categoryData[currentCategory + 1].threshold) {
+        if (category.assignments.length > 0) {
+          categories.push(category)
+        }
+
+        currentCategory++;
+        category = {title: categoryData[currentCategory].title, assignments: []}
+      }
+
+      category.assignments.push(await assignment.objectify());
 
     }
 
-    categories.push(mainCategory)
+    categories.push(category)
 
 
     var response : object = {

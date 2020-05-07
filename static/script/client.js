@@ -148,14 +148,21 @@ function updateAssignments() {
                 var assignmentTitle = assignment.name;
                 var courseId = assignment.course;
                 var course = yield getCourseName(courseId);
-                var dueDate = assignment.due;
+                var dueDate = new Date(assignment.due);
+                var dateFormatOptions = {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric'
+                };
+                var dueDateStr = new Intl.DateTimeFormat('en-US', dateFormatOptions).format(dueDate);
                 var expectedTTC = assignment.ttc;
                 var notes = assignment.note;
                 html += '<tr class="table-danger">';
                 html += '<th scope="row">1</th>';
                 html += '<td>' + assignmentTitle + '</td>';
                 html += '<td>' + course + '</td>';
-                html += '<td>' + dueDate + '</td>';
+                html += '<td>' + dueDateStr + '</td>';
                 html += '<td>' + expectedTTC + '</td>';
                 html += '<td>' + notes + '</td>';
                 html += '<td><button type="button" class="btn btn-success btn-sm" title="Completed">&#10004;</button><button type="button" class="btn btn-primary btn-sm" title="Edit">&#9997;</button><button type="button" class="btn btn-danger btn-sm" title="Remove">&#10006;</button></td></tr>';
@@ -169,13 +176,17 @@ function updateAssignments() {
 function createAssignmentButton() {
     let nameElement = document.getElementById('assignment-name');
     let classElement = document.getElementById('class-pick');
-    let dueElement = document.getElementById('date');
+    let dateElement = document.getElementById('date');
+    let timeElement = document.getElementById('time');
     let ttcElement = document.getElementById('ttc');
     let notesElement = document.getElementById('notes');
+    let date = dateElement.value;
+    let time = timeElement.value;
+    let due = Date.parse(date + ' ' + time);
     let name = nameElement.value;
     let course = parseInt(classElement.value) || 3;
-    let due = 0; //dueElement.value;
-    let ttc = 0; //ttcElement.value;
+    // let due = 0;//dueElement.value;
+    let ttc = parseInt(ttcElement.value) || 1;
     let notes = notesElement.value;
     createAssignment(name, due, ttc, course, notes);
 }

@@ -174,7 +174,15 @@ async function updateAssignments() : Promise<void> {
 
       var course = await getCourseName(courseId);
 
-      var dueDate : string = assignment.due;
+      var dueDate : Date = new Date(assignment.due)
+      var dateFormatOptions = {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      }
+      var dueDateStr : string = new Intl.DateTimeFormat('en-US', dateFormatOptions).format(dueDate);
+
       var expectedTTC : string = assignment.ttc;
       var notes : string = assignment.note;
 
@@ -182,7 +190,7 @@ async function updateAssignments() : Promise<void> {
       html += '<th scope="row">1</th>'
       html += '<td>' + assignmentTitle + '</td>'
       html += '<td>' + course + '</td>'
-      html += '<td>' + dueDate + '</td>'
+      html += '<td>' + dueDateStr + '</td>'
       html += '<td>' + expectedTTC + '</td>'
       html += '<td>' + notes + '</td>'
       html += '<td><button type="button" class="btn btn-success btn-sm" title="Completed">&#10004;</button><button type="button" class="btn btn-primary btn-sm" title="Edit">&#9997;</button><button type="button" class="btn btn-danger btn-sm" title="Remove">&#10006;</button></td></tr>';
@@ -199,14 +207,20 @@ async function updateAssignments() : Promise<void> {
 function createAssignmentButton() {
   let nameElement = document.getElementById('assignment-name') as HTMLInputElement;
   let classElement = document.getElementById('class-pick') as HTMLInputElement;
-  let dueElement = document.getElementById('date') as HTMLInputElement;
+  let dateElement = document.getElementById('date') as HTMLInputElement;
+  let timeElement = document.getElementById('time') as HTMLInputElement;
   let ttcElement = document.getElementById('ttc') as HTMLInputElement;
   let notesElement = document.getElementById('notes') as HTMLInputElement;
 
+  let date = dateElement.value;
+  let time = timeElement.value;
+
+  let due = Date.parse(date + ' ' + time)
+
   let name = nameElement.value;
   let course = parseInt(classElement.value) || 3;
-  let due = 0;//dueElement.value;
-  let ttc = 0;//ttcElement.value;
+  // let due = 0;//dueElement.value;
+  let ttc = parseInt(ttcElement.value) || 1;
   let notes = notesElement.value;
 
   createAssignment(name, due, ttc, course, notes)
