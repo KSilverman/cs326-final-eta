@@ -43,14 +43,14 @@ async function register() : Promise<void> {
 
   let err = document.getElementById("login_resp") as HTMLElement;
 
-  if (obj.status != 'success') 
+  if (obj.status != 'success')
   {
     err.className = "";
     err.classList.add("alert");
     err.classList.add("alert-danger");
     err.innerHTML = "<p>" + obj.message + "</p>";
-  } 
-  else 
+  }
+  else
   {
     err.className = "";
     err.classList.add("alert");
@@ -192,6 +192,40 @@ async function updateAssignments() : Promise<void> {
   let assignmentContainer = document.getElementById("assignments") as HTMLElement;
   assignmentContainer.innerHTML = html;
 }
+
+function createAssignmentButton() {
+  let nameElement = document.getElementById('assignment-name') as HTMLInputElement;
+  let classElement = document.getElementById('class-pick') as HTMLInputElement;
+  let dueElement = document.getElementById('date') as HTMLInputElement;
+  let ttcElement = document.getElementById('ttc') as HTMLInputElement;
+  let notesElement = document.getElementById('notes') as HTMLInputElement;
+
+  let name = nameElement.value;
+  let course = parseInt(classElement.value);
+  let due = 0;//dueElement.value;
+  let ttc = 0;//ttcElement.value;
+  let notes = notesElement.value;
+
+  createAssignment(name, due, ttc, course, notes)
+}
+
+async function createAssignment(name : string, due : number, ttc : number, classId : number, notes : string) {
+  let payload : object = {
+    name: name,
+    due: due,
+    ttc: ttc,
+    classId: classId,
+    notes: notes
+  }
+
+  var resp = await postData('/api/assignment/create', payload);
+
+  console.log(resp.text())
+
+  // TODO this is bad?
+  updateAssignments()
+}
+
 /*
 function getOrderedAssignmentsWithCats(list : any[]) : any[]
 {
