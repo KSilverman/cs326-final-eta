@@ -11,7 +11,9 @@ if (process.env.PORT != null) {
   port = 8080;
 }
 
-database.connect("***REMOVED***").then(() => {
+var dbUrl : string = process.env.MONGODB_URI || 'mongodb://localhost:27017/mydb';
+
+database.connect(dbUrl).then(() => {
 
   const server = new Server(database, port);
 
