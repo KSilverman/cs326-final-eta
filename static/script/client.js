@@ -165,6 +165,34 @@ function updateAssignments() {
         assignmentContainer.innerHTML = html;
     });
 }
+function createAssignmentButton() {
+    let nameElement = document.getElementById('assignment-name');
+    let classElement = document.getElementById('class-pick');
+    let dueElement = document.getElementById('date');
+    let ttcElement = document.getElementById('ttc');
+    let notesElement = document.getElementById('notes');
+    let name = nameElement.value;
+    let course = parseInt(classElement.value);
+    let due = 0; //dueElement.value;
+    let ttc = 0; //ttcElement.value;
+    let notes = notesElement.value;
+    createAssignment(name, due, ttc, course, notes);
+}
+function createAssignment(name, due, ttc, classId, notes) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let payload = {
+            name: name,
+            due: due,
+            ttc: ttc,
+            classId: classId,
+            notes: notes
+        };
+        var resp = yield postData('/api/assignment/create', payload);
+        console.log(resp.text());
+        // TODO this is bad?
+        updateAssignments();
+    });
+}
 /*
 function getOrderedAssignmentsWithCats(list : any[]) : any[]
 {

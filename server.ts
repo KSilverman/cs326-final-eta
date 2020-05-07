@@ -220,7 +220,7 @@ export class Server {
   private async RequestGetAllCourses(req : any, res : any) {
     //console.log(req);
     var _uid = this.validateSessionAndGetUID(req);
-    if (_uid == null || !this.checkAuthorization(req.session.uid, _uid)) {
+    if (_uid == null) {
       res.end(JSON.stringify({status: 'unauthorized'}));
       return;
     }
@@ -279,7 +279,7 @@ export class Server {
 
   private async RequestGetAllAssignments(req : any, res : any) {
     var _uid = this.validateSessionAndGetUID(req);
-    if (_uid == null || !this.checkAuthorization(req.session.uid, _uid)) {
+    if (_uid == null) {
       res.end(JSON.stringify({status: 'unauthorized'}));
       return;
     }
@@ -315,6 +315,10 @@ export class Server {
 
   private async RequestCreateAssignment(req : any, res : any) {
 
+    var response : object = {}
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestDeleteAssignment(req : any, res : any) {
