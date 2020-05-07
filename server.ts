@@ -307,7 +307,7 @@ export class Server {
     tomorrowEnd.setMinutes(0)
     tomorrowEnd.setSeconds(0)
     tomorrowEnd.setMilliseconds(0)
-    tomorrowEnd.setDate(today.getDate() + 1)
+    tomorrowEnd.setDate(tomorrowEnd.getDate() + 1)
 
     console.log(tomorrowEnd.getTime())
 
