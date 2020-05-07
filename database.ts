@@ -289,25 +289,25 @@ export class Database {
     return id;
   }
 
-  public async createAssignment(name : string, uid : number, classID : number, date : number, note : string) : Promise<Assignment> {
+  public async createAssignment(uid : number, name : string, classId : number, due : number, note : string, ttc : number) : Promise<Assignment> {
     let id = await this.getNextECId();
 
-    let ass : Assignment = new Assignment(name, id, classID, note, date, uid);
+    let ass : Assignment = new Assignment(id, uid, name, classId, due, note, ttc);
     await this.putAssignment(ass);
 
     return ass;
   }
 
-  public async putAssignment(ass : Assignment) : Promise<void> {
+  public async putAssignment(assignment : Assignment) : Promise<void> {
     let db = this.client.db(this.dbName);
     let collection = db.collection('assignments');
 
     let res = await collection.updateOne(
       {
-        id: ass.id,
+        id: assignment.id,
       },
       {
-        $set : ass
+        $set : assignment
       },
       {
         upsert: true
@@ -315,7 +315,7 @@ export class Database {
     );
   }
 
-  public async getAss(id : number) : Promise<Assignment> {
+  public async getAssignment(id : number) : Promise<Assignment> {
     let db = this.client.db(this.dbName);
     let collection = db.collection('assignments');
 
@@ -325,12 +325,12 @@ export class Database {
       }
     );
 
-    let ass : Assignment = new Assignment(res.assignmentName, res.assignmentID, res.course, res.notes, res.timeToComplete, res.uid);
+    let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.classId, res.due, res.note, res.ttc);
 
-    return ass;
+    return assignment;
   }
 
-  public async getAssignmentForUser(uid : number) : Promise<Assignment[] | null> {
+  public async getAssignmentsForUser(uid : number) : Promise<Assignment[]> {
     let db = this.client.db(this.dbName);
     let collection = db.collection('assignments');
 
@@ -344,8 +344,8 @@ export class Database {
       let assignments = []
 
       for (let res of results) {
-        let ass : Assignment = new Assignment(res.assignmentName, res.assignmentID, res.course, res.notes, res.timeToComplete, res.uid);
-        assignments.push(ass)
+        let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.classId, res.due, res.note, res.ttc);
+        assignments.push(assignment)
       }
 
       return assignments;
@@ -353,5 +353,5 @@ export class Database {
       return [];
     }
   }
-  
+
 }
