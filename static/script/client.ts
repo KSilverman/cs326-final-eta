@@ -168,12 +168,15 @@ async function updateAssignments() : Promise<void> {
     html += '</tr></thead><tbody>';
 
     for (var assignment of assignments) {
-      var assignmentTitle : string = assignment.title;
-      var course : string = assignment.course.title;
-      var classId : string = assignment.course.id;
-      var dueDate : string = assignment.dueDate;
-      var expectedTTC : string = assignment.expectedTTC;
-      var notes : string = assignment.notes;
+      console.log(assignment)
+      var assignmentTitle : string = assignment.name;
+      var courseId : number = assignment.course;
+
+      var course = 'Course id ' + courseId;
+
+      var dueDate : string = assignment.due;
+      var expectedTTC : string = assignment.ttc;
+      var notes : string = assignment.note;
 
       html += '<tr class="table-danger">';
       html += '<th scope="row">1</th>'
@@ -201,7 +204,7 @@ function createAssignmentButton() {
   let notesElement = document.getElementById('notes') as HTMLInputElement;
 
   let name = nameElement.value;
-  let course = parseInt(classElement.value);
+  let course = parseInt(classElement.value) || 3;
   let due = 0;//dueElement.value;
   let ttc = 0;//ttcElement.value;
   let notes = notesElement.value;
@@ -209,21 +212,26 @@ function createAssignmentButton() {
   createAssignment(name, due, ttc, course, notes)
 }
 
-async function createAssignment(name : string, due : number, ttc : number, classId : number, notes : string) {
+async function createAssignment(name : string, due : number, ttc : number, courseId : number, notes : string) {
   let payload : object = {
     name: name,
     due: due,
     ttc: ttc,
-    classId: classId,
-    notes: notes
+    courseId: courseId,
+    note: notes
   }
+
+  console.log(payload)
 
   var resp = await postData('/api/assignment/create', payload);
 
-  console.log(resp.text())
+  let obj = await resp.json()
+  console.log(obj)
 
-  // TODO this is bad?
-  updateAssignments()
+  if (obj.status == 'success') {
+    // TODO this is bad?
+    updateAssignments()
+  }
 }
 
 /*
