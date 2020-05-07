@@ -1,5 +1,6 @@
 import { User } from './types/user'
 import { Exam } from './types/exam'
+import { Course } from './types/course'
 import { Extracurricular } from './types/extracurricular';
 import { Assignment } from './types/assignment';
 
@@ -36,7 +37,7 @@ export class Database {
 
   private async init() : Promise<void> {
     let db = this.client.db(this.dbName);
-    let collections = ['users', 'exams', 'extracurriculars', 'assignments'];
+    let collections = ['users', 'exams', 'extracurriculars', 'assignments', 'courses'];
     for (var collectionName of collections) {
       var seqDoc = await db.collection(collectionName).findOneAndUpdate(
         {
@@ -209,7 +210,78 @@ export class Database {
     }
   }
 
+  // Courses
 
+  private async getNextCourseId() : Promise<number> {
+    let id = await this.getSequenceNextValue('courses')
+    return id;
+  }
+
+  public async createCourse(uid : number, name : string, calendarData : object[]) : Promise<Course> {
+    let id = await this.getNextCourseId();
+
+    let course : Course = new Course(id, uid, name, calendarData)
+    await this.putCourse(course);
+
+    return course;
+  }
+
+  public async putCourse(course : Course) : Promise<void> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('courses');
+
+    let res = await collection.updateOne(
+      {
+        id: course.id,
+      },
+      {
+        $set : course
+      },
+      {
+        upsert: true
+      }
+    );
+  }
+
+  public async getCourse(id : number) : Promise<Course> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('courses');
+
+    let res = await collection.findOne(
+      {
+        id: id,
+      }
+    );
+
+    let course : Course = new Course(res.id, res.uid, res.title, res.calendarData)
+
+    return course;
+  }
+
+  public async getCoursesForUser(uid : number) : Promise<Course[]> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('courses');
+
+    try {
+      let result = await collection.find(
+        {
+          uid: uid,
+        }
+      );
+
+      let courses = []
+
+      let results = await result.toArray()
+      for (let res of results) {
+        let course : Course = new Course(res.id, res.uid, res.title, res.calendarData)
+        courses.push(course)
+      }
+
+      return courses;
+    } catch (e) {
+      return [];
+    }
+  }
 
   // EXTRACURRICULARS
 
@@ -264,7 +336,7 @@ export class Database {
     let collection = db.collection('extracurriculars');
 
     try {
-      let results = await collection.findMany(
+      let result = await collection.findMany(
         {
           uid: uid,
         }
@@ -272,6 +344,7 @@ export class Database {
 
       let extracurriculars = []
 
+      let results = await result.toArray()
       for (let res of results) {
         let ec : Extracurricular = new Extracurricular(res.times, res.name, res.note, res.uid, res.id);
         extracurriculars.push(ec)
