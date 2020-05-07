@@ -172,7 +172,7 @@ async function updateAssignments() : Promise<void> {
       var assignmentTitle : string = assignment.name;
       var courseId : number = assignment.course;
 
-      var course = 'Course id ' + courseId;
+      var course = await getCourseName(courseId);
 
       var dueDate : string = assignment.due;
       var expectedTTC : string = assignment.ttc;
