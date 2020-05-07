@@ -290,7 +290,7 @@ export class Database {
   }
 
   public async createAssignment(uid : number, name : string, classId : number, due : number, note : string, ttc : number) : Promise<Assignment> {
-    let id = await this.getNextECId();
+    let id = await this.getNextAssignmentId();
 
     let ass : Assignment = new Assignment(id, uid, name, classId, due, note, ttc);
     await this.putAssignment(ass);
@@ -325,7 +325,7 @@ export class Database {
       }
     );
 
-    let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.classId, res.due, res.note, res.ttc);
+    let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.courseId, res.due, res.note, res.ttc);
 
     return assignment;
   }
@@ -335,7 +335,7 @@ export class Database {
     let collection = db.collection('assignments');
 
     try {
-      let results = await collection.findMany(
+      let result = await collection.find(
         {
           uid: uid,
         }
@@ -343,13 +343,16 @@ export class Database {
 
       let assignments = []
 
+      let results = await result.toArray()
+
       for (let res of results) {
-        let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.classId, res.due, res.note, res.ttc);
+        let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.courseId, res.due, res.note, res.ttc);
         assignments.push(assignment)
       }
 
       return assignments;
     } catch (e) {
+      console.log(e)
       return [];
     }
   }

@@ -144,12 +144,13 @@ function updateAssignments() {
             html += '<th scope="col">Actions</th>';
             html += '</tr></thead><tbody>';
             for (var assignment of assignments) {
-                var assignmentTitle = assignment.title;
-                var course = assignment.course.title;
-                var classId = assignment.course.id;
-                var dueDate = assignment.dueDate;
-                var expectedTTC = assignment.expectedTTC;
-                var notes = assignment.notes;
+                console.log(assignment);
+                var assignmentTitle = assignment.name;
+                var courseId = assignment.course;
+                var course = 'Course id ' + courseId;
+                var dueDate = assignment.due;
+                var expectedTTC = assignment.ttc;
+                var notes = assignment.note;
                 html += '<tr class="table-danger">';
                 html += '<th scope="row">1</th>';
                 html += '<td>' + assignmentTitle + '</td>';
@@ -172,25 +173,29 @@ function createAssignmentButton() {
     let ttcElement = document.getElementById('ttc');
     let notesElement = document.getElementById('notes');
     let name = nameElement.value;
-    let course = parseInt(classElement.value);
+    let course = parseInt(classElement.value) || 3;
     let due = 0; //dueElement.value;
     let ttc = 0; //ttcElement.value;
     let notes = notesElement.value;
     createAssignment(name, due, ttc, course, notes);
 }
-function createAssignment(name, due, ttc, classId, notes) {
+function createAssignment(name, due, ttc, courseId, notes) {
     return __awaiter(this, void 0, void 0, function* () {
         let payload = {
             name: name,
             due: due,
             ttc: ttc,
-            classId: classId,
-            notes: notes
+            courseId: courseId,
+            note: notes
         };
+        console.log(payload);
         var resp = yield postData('/api/assignment/create', payload);
-        console.log(resp.text());
-        // TODO this is bad?
-        updateAssignments();
+        let obj = yield resp.json();
+        console.log(obj);
+        if (obj.status == 'success') {
+            // TODO this is bad?
+            updateAssignments();
+        }
     });
 }
 /*

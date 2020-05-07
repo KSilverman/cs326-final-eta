@@ -1,7 +1,7 @@
 export class Assignment {
     readonly id : number; // assignment ID
     readonly uid : number; // user id
-    public classId : number; // class
+    public courseId : number; // class
 
     public name : string; // name of assignment
     public note : string; // info about assignment
@@ -9,10 +9,10 @@ export class Assignment {
     public due : number; // due date, UTC
     public ttc : number; // some date
 
-    constructor(id : number, uid : number, name : string, classId : number, due : number, note : string, ttc : number){
+    constructor(id : number, uid : number, name : string, courseId : number, due : number, note : string, ttc : number){
         this.id = id;
         this.uid = uid;
-        this.classId = classId;
+        this.courseId = courseId;
 
         this.name = name;
         this.note = note;
@@ -25,7 +25,7 @@ export class Assignment {
       return {
         id: this.id,
         uid: this.uid,
-        class: this.classId,
+        course: this.courseId,
 
         name: this.name,
         note: this.note,

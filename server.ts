@@ -314,8 +314,34 @@ export class Server {
   }
 
   private async RequestCreateAssignment(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
-    var response : object = {}
+    let response;
+
+    try {
+      var name = req.body.name;
+      var courseId = req.body.courseId;
+      var due = req.body.due;
+      var note = req.body.note;
+      var ttc = req.body.ttc;
+
+      let assignment = await this.database.createAssignment(uid, name, courseId, due, note, ttc);
+
+      response = {
+        status: 'success',
+        assignment: await assignment.objectify()
+      }
+    } catch (e) {
+      response = {
+        status: 'failed',
+        message: e.message
+      }
+    }
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
