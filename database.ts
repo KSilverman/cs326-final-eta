@@ -292,7 +292,7 @@ export class Database {
   public async createAssignment(uid : number, name : string, classId : number, due : number, note : string, ttc : number) : Promise<Assignment> {
     let id = await this.getNextAssignmentId();
 
-    let ass : Assignment = new Assignment(id, uid, name, classId, due, note, ttc);
+    let ass : Assignment = new Assignment(id, uid, name, classId, due, note, ttc, false);
     await this.putAssignment(ass);
 
     return ass;
@@ -325,9 +325,20 @@ export class Database {
       }
     );
 
-    let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.courseId, res.due, res.note, res.ttc);
+    let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.courseId, res.due, res.note, res.ttc, res.completed);
 
     return assignment;
+  }
+
+  public async deleteAssignment(id : number) : Promise<void> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('assignments');
+
+    let res = await collection.remove(
+      {
+        id: id,
+      }
+    );
   }
 
   public async getAssignmentsForUser(uid : number) : Promise<Assignment[]> {
@@ -346,7 +357,7 @@ export class Database {
       let results = await result.toArray()
 
       for (let res of results) {
-        let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.courseId, res.due, res.note, res.ttc);
+        let assignment : Assignment = new Assignment(res.id, res.uid, res.name, res.courseId, res.due, res.note, res.ttc, res.completed);
         assignments.push(assignment)
       }
 

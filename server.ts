@@ -415,7 +415,42 @@ export class Server {
   }
 
   private async RequestDeleteAssignment(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+
+    try {
+      var id : number = parseInt(req.params.id)
+
+      let assignment = await this.database.getAssignment(id);
+
+      if (assignment == null || !this.checkAuthorization(uid, assignment.uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+        await this.database.deleteAssignment(id)
+        response = {
+          status: 'success',
+          assignment: await assignment.objectify()
+        }
+      }
+
+
+    } catch (e) {
+      response = {
+        status: 'failed',
+        message: e.message
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestUpdateAssignment(req : any, res : any) {
@@ -495,7 +530,7 @@ export class Server {
 
     let exams = await this.database.getExamsForUser(uid);
     // let extracurriculars = await this.database.getExtracurricularsForUser(uid);
-    // let assignments      = await this.database.getAssignmentsForUser(uid);
+    let assignments      = await this.database.getAssignmentsForUser(uid);
     // let courses          = await this.database.getCoursesForUser(uid);
 
     for (let exam of exams) {
@@ -508,16 +543,72 @@ export class Server {
       calendarEvents.push(calendarEntry)
     }
 
+    let colors = ['#fd588d', '#fd8a5e', '#f6eb52', '#46ddf2', '#10ccbc']
+
+    let assignmentTimePairs = this.getAssignmentStartTimes(assignments, []);
+    for (let pair of assignmentTimePairs) {
+      let startTime = pair.startTime;
+      let assignment = pair.assignment;
+
+      let calendarEntry = {
+        type: 'assignment',
+        id: assignment.id,
+        event: {
+          title: assignment.name,
+          start: startTime,
+          end: startTime + assignment.ttc,
+          color: colors[assignment.courseId]
+        }
+      }
+
+      calendarEvents.push(calendarEntry)
+    }
+
     // TODO : extra
     // TODO : assign
     // TODO : coures
 
     var response = {
       status: 'success',
-      calendar: exams
+      calendar: calendarEvents
     };
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
+  }
+
+  private getAssignmentStartTimes(assignments : Assignment[], timeBlocks : any[]) {
+    /*
+    timeBlock = {
+      start: utc,
+      end: utc
+    }*/
+
+    if (assignments.length == 0) return [];
+
+    // put in reverse
+    assignments.sort((a, b) => {
+      return b.due - a.due
+    })
+
+
+    let res : any[] = [];
+
+    let startTime = assignments[0].due;
+    for (let assignment of assignments) {
+      if (startTime > assignment.due)
+        startTime = assignment.due
+
+      startTime -= (assignment.ttc * 3600 * 1000);
+
+      let pair = {
+        startTime: startTime,
+        assignment: assignment
+      }
+
+      res.push(pair)
+    }
+
+    return res;
   }
 }
