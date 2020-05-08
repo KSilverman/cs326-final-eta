@@ -121,6 +121,7 @@ async function updateCalendar() : Promise<void> {
   calendar.render();
 }
 
+let allAssignments : any = {};
 async function updateAssignments() : Promise<void> {
   var resp = await postData('/api/assignment/all', {});
 
@@ -143,9 +144,12 @@ async function updateAssignments() : Promise<void> {
 
   var html : string = '';
 
+  allAssignments = {};
+
   for (var category of categories) {
     var title : string = category.title;
     var assignments = category.assignments;
+
 
     html += '<div class="row"> <div class="col-sm h1 py-1 text-center">';
     html += title;
@@ -162,7 +166,8 @@ async function updateAssignments() : Promise<void> {
     html += '</tr></thead><tbody>';
 
     for (var assignment of assignments) {
-      console.log(assignment)
+      allAssignments[assignment.id] = assignment;
+
       var assignmentTitle : string = assignment.name;
       var courseId : number = assignment.course;
 
@@ -188,7 +193,7 @@ async function updateAssignments() : Promise<void> {
       html += '<td>' + expectedTTC + '</td>'
       html += '<td>' + notes + '</td>'
       html += '<td><button type="button" class="btn btn-success btn-sm" title="Completed">&#10004;</button>';
-      html += '<button type="button" class="btn btn-primary btn-sm" title="Edit">&#9997;</button>';
+      html += '<button type="button" class="btn btn-primary btn-sm" onclick="editAssignmentButton(' + assignment.id + ')" title="Edit">&#9997;</button>';
       html += '<button type="button" class="btn btn-danger btn-sm" title="Remove" onclick="deleteAssignmentButton(' + assignment.id + ')">&#10006;</button></td></tr>';
     }
 
@@ -239,6 +244,31 @@ async function createAssignment(name : string, due : number, ttc : number, cours
     updateAssignments()
 		updateCalendar()
   }
+}
+
+// populates moda with existing info
+function editAssignmentButton(id : number) {
+  let nameElement = document.getElementById('assignment-name') as HTMLInputElement;
+  let classElement = document.getElementById('class-pick') as HTMLInputElement;
+  let dateElement = document.getElementById('date') as HTMLInputElement;
+  let timeElement = document.getElementById('time') as HTMLInputElement;
+  let ttcElement = document.getElementById('ttc') as HTMLInputElement;
+  let notesElement = document.getElementById('notes') as HTMLInputElement;
+
+  let assignment = allAssignments[id];
+
+  if (assignment == undefined) return;
+
+  let dueDate = new Date(assignment.due);
+
+  nameElement.value = assignment.name
+  classElement.value = assignment.courseId
+  dateElement.valueAsDate = dueDate;
+  timeElement.valueAsDate = dueDate;
+  ttcElement.value = assignment.ttc;
+  notesElement.value = assignment.note;
+
+  showAss();
 }
 
 async function editAssignment(assId: string, name : string, due : number, ttc : number, courseId : number, notes : string) {
