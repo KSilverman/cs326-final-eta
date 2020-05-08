@@ -315,7 +315,7 @@ function clearActivePanels()
   for(let p of panels.childNodes)
   {
     if(p != null && typeof p !== 'undefined' && p.nodeName != '#text') {
-      console.log(p)
+      //console.log(p)
       p.classList.remove("active");
     }
   }
