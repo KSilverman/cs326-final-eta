@@ -11,7 +11,7 @@ if (process.env.PORT != null) {
   port = 8080;
 }
 
-var dbUrl : string = process.env.MONGODB_URI || 'mongodb://localhost:27017/mydb';
+var dbUrl : string = '***REMOVED***';//process.env.MONGODB_URI || 'mongodb://localhost:27017/mydb';
 
 database.connect(dbUrl).then(() => {
 

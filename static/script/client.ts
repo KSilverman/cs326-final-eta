@@ -79,13 +79,17 @@ async function setupLargeCalendar() : Promise<void> {
 function setupDashboardCalendar() : void {
   var calendarEl = document.getElementById('calendar');
 
+  let currentTime = new Date();
+  let currentTimeStr = `${currentTime.getHours()}:${currentTime.getMinutes()}`
+
   calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: [ 'timeGrid' ],
     defaultView: 'timeGridWeek',
     height: 400,
-    scrollTime: Date.now(),
+    scrollTime: currentTimeStr,
     slotDuration: '00:30:00',
-    allDaySlot: false
+    allDaySlot: false,
+    nowIndicator: true
   });
 
   calendar.render();
@@ -268,10 +272,48 @@ async function deleteAssignment(id : number) {
 
   if (obj.status == 'success') {
     updateAssignments()
+    updateCalendar()
   }
 }
 
+function createExamButton() {
+  // TODO : fill in fields, call createExam
+}
+
+async function createExam(name : string, courseId : number, startTime : string, endTime : string) {
+  let payload : object = {
+    name: name,
+    course: courseId,
+    startTime: startTime,
+    endTime: endTime
+  }
+
+  var resp = await postData('/api/exam/create', payload);
+
+  let obj = await resp.json()
+
+  if (obj.status == 'success') {
+    updateAssignments()
+		updateCalendar()
+  }
+}
+
+<<<<<<< HEAD
 function clearActivePanels()
+=======
+async function deleteExam(id : number) {
+  var resp = await postData('/api/exam/' + id + '/delete', {});
+
+  let obj = await resp.json()
+
+  if (obj.status == 'success') {
+    // updateAssignments()
+    updateCalendar()
+  }
+}
+/*
+function getOrderedAssignmentsWithCats(list : any[]) : any[]
+>>>>>>> f57594a227a82ceb9631a7253494c1bb7dae9714
 {
   let panels : any = document.getElementById('panels');
   for(let p of panels.childNodes)

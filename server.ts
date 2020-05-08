@@ -340,7 +340,6 @@ export class Server {
   private async RequestUpdateCourse(req : any, res : any) {
     var response : object = {};
 
-
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
@@ -504,8 +503,7 @@ export class Server {
       } else {
         await this.database.deleteAssignment(id)
         response = {
-          status: 'success',
-          assignment: assignment.objectify()
+          status: 'success'
         }
       }
 
@@ -522,7 +520,48 @@ export class Server {
   }
 
   private async RequestUpdateAssignment(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+    try {
+      let id = req.params.id;
+
+      let assignment = await this.database.getAssignment(id);
+
+      if (assignment == null || !this.checkAuthorization(uid, assignment.uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+
+        if (req.body.courseId) assignment.courseId = req.body.courseId;
+
+        if (req.body.name !== undefined) assignment.name = req.body.name;
+        if (req.body.note !== undefined) assignment.note = req.body.note;
+
+        if (req.body.due !== undefined) assignment.due = req.body.due;
+        if (req.body.ttc !== undefined) assignment.ttc = req.body.ttc;
+
+        if (req.body.completed !== undefined) assignment.completed = req.body.completed;
+
+
+        await this.database.putAssignment(assignment)
+        response = {
+          status: 'success',
+          assignment: assignment.objectify()
+        }
+      }
+
+    } catch(e) {
+
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestGetAllExams(req : any, res : any) {
@@ -648,6 +687,7 @@ export class Server {
 
     let uid = req.session.uid;
 
+    // items to be rendered by FullCalendar
     let calendarEvents = [];
 
     let exams            = await this.database.getExamsForUser(uid);
@@ -655,7 +695,12 @@ export class Server {
     let assignments      = await this.database.getAssignmentsForUser(uid);
     let courses          = await this.database.getCoursesForUser(uid);
 
+    // colors by course mod 5
     let colors = ['#fd588d', '#fd8a5e', '#f6eb52', '#46ddf2', '#10ccbc']
+
+
+    // times where assignment work cannot be scheduled by the assignment scheduling algo
+    let timeBlocks = [];
 
     for (let course of courses) {
       let event : any = Object.assign({}, course.calendarData)
@@ -668,6 +713,12 @@ export class Server {
         event: event
       })
 
+      timeBlocks.push({
+        start: event.startTime,
+        end: event.endTime,
+        daysOfWeek: event.daysOfWeek
+      })
+
       if (course.discussionCalendarData) {
         let dEvent : any = Object.assign({}, course.discussionCalendarData)
         dEvent.title = course.title + ' Discussion';
@@ -677,6 +728,12 @@ export class Server {
           type: 'course',
           id: course.id,
           event: dEvent
+        })
+
+        timeBlocks.push({
+          start: dEvent.startTime,
+          end: dEvent.endTime,
+          daysOfWeek: dEvent.daysOfWeek
         })
       }
     }
@@ -691,26 +748,30 @@ export class Server {
       calendarEvents.push(calendarEntry)
     }
 
-    let assignmentTimePairs = this.getAssignmentStartTimes(assignments, []);
+
+
+    let assignmentTimePairs = this.getAssignmentStartTimes(assignments, timeBlocks);
     for (let pair of assignmentTimePairs) {
-      let startTime = pair.startTime;
+      let splits = pair.splits;
       let assignment = pair.assignment;
 
       let course : Course = await this.database.getCourse(assignment.courseId);
 
-      let calendarEntry = {
-        type: 'assignment',
-        id: assignment.id,
-        event: {
-          title: '[' + course.title + '] ' + assignment.name,
-          start: startTime,
-          end: startTime + (assignment.ttc * 3600 * 1000),
-          backgroundColor: colors[assignment.courseId % 5] + '77',
-          borderColor: colors[assignment.courseId % 5]
+      let i = 0;
+      for (let split of splits) {
+        let calendarEntry = {
+          type: 'assignment',
+          id: assignment.id,
+          event: {
+            title: `[${course.title}] ${assignment.name} (${splits.length - i++} / ${splits.length})`,
+            start: split.startTime,
+            end: split.startTime + split.duration,
+            backgroundColor: colors[assignment.courseId % 5] + '77',
+            borderColor: colors[assignment.courseId % 5]
+          }
         }
+        calendarEvents.push(calendarEntry)
       }
-
-      calendarEvents.push(calendarEntry)
     }
 
     // TODO : extra
@@ -726,7 +787,49 @@ export class Server {
     res.end(JSON.stringify(response))
   }
 
-  private getAssignmentStartTimes(assignments : Assignment[], timeBlocks : any[]) {
+  private getTimeBlocksFromRepeatingEvent(eventData : any, lastAssignmentDue : number) : any[] {
+    // super simple, lets just iterate over every day.
+
+    let occurrences = [];
+
+    let now : number = Date.now()
+    let day = new Date();
+    day.setHours(0, 0, 0, 0)
+
+    // need every occurance of the event between now and lastAssignmentDue
+    while (day.getTime() < lastAssignmentDue) {
+      console.log(day.toDateString())
+
+      let dayOfWeek = day.getDay()
+
+      console.log(dayOfWeek)
+
+      if (eventData.daysOfWeek.map((x : any) => parseInt(x)).includes(dayOfWeek)) {
+        console.log('today!')
+        // this is jank
+        let startString = day.toDateString() + ' ' + eventData.start
+        let startDate = new Date(startString)
+
+        let endString = day.toDateString() + ' ' + eventData.end
+        let endDate = new Date(endString)
+
+        if (endDate.getTime() < startDate.getTime())
+          endDate.setDate(endDate.getDate() + 1)
+
+        let timeBlock = {
+          start: startDate.getTime(),
+          end: endDate.getTime(),
+        }
+        occurrences.push(timeBlock)
+      }
+
+      day.setDate(day.getDate() + 1)
+    }
+
+    return occurrences
+  };
+
+  private getAssignmentStartTimes(assignments : Assignment[], timeInfos : any[]) {
     /*
     timeBlock = {
       start: utc,
@@ -740,6 +843,21 @@ export class Server {
       return b.due - a.due
     })
 
+    let lastAssignmentDue = assignments[0].due;
+
+    let timeBlocks : any[] = [];
+    for (let timeInfo of timeInfos) {
+      if (timeInfo.daysOfWeek !== undefined) {
+        let blocks = this.getTimeBlocksFromRepeatingEvent(timeInfo, lastAssignmentDue);
+        timeBlocks = timeBlocks.concat(blocks)
+      } else {
+        timeBlocks.push(timeInfo)
+      }
+    }
+
+    timeBlocks.sort((a, b) => {
+      return b.end - a.end;
+    });
 
     let res : any[] = [];
 
@@ -748,10 +866,46 @@ export class Server {
       if (startTime > assignment.due)
         startTime = assignment.due
 
-      startTime -= (assignment.ttc * 3600 * 1000);
+
+      let nextTimeBlock = timeBlocks[timeBlocks.length - 1]
+
+      let splits = [];
+
+      // amount of assignment completed
+      let remaining = (assignment.ttc * 3600 * 1000);
+      while (remaining > 0 && timeBlocks.length > 0) {
+
+        // how much time do we have between the next time block and now?
+        let nextEnd = nextTimeBlock.end;
+        let freeTime = startTime - nextEnd;
+        freeTime = Math.min(freeTime, remaining);
+
+        splits.push({
+          startTime: startTime - freeTime,
+          duration: freeTime,
+        })
+
+        remaining -= freeTime;
+        startTime = nextTimeBlock.start;
+
+        timeBlocks.pop()
+        if (timeBlocks.length > 0)
+          nextTimeBlock = timeBlocks[timeBlocks.length - 1];
+        else
+          nextTimeBlock = null;
+      }
+
+      if (remaining > 0) {
+        // no time blocks left
+        splits.push({
+          startTime: startTime - remaining,
+          duration: remaining
+        })
+        startTime -= remaining;
+      }
 
       let pair = {
-        startTime: startTime,
+        splits: splits,
         assignment: assignment
       }
 
