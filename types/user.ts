@@ -1,6 +1,4 @@
-console.log("user before");
 const bcrypt = require('bcrypt')
-console.log("user after");
 
 export class User {
   readonly id : number;

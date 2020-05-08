@@ -361,7 +361,7 @@ function editAssignmentButton(id : number) {
   let dueDate = new Date(assignment.due);
 
   nameElement.value = assignment.name
-  classElement.value = assignment.courseId
+  classElement.value = assignment.course
   dateElement.valueAsDate = dueDate;
   timeElement.valueAsDate = dueDate;
   ttcElement.value = assignment.ttc;
