@@ -47,47 +47,74 @@ ___
 **Course** (all require login)
 |API|Utility|
 |----|----|
-|`/user/:uid/course/all`|Gets all courses associated with the user|
-|`/user/:uid/course/:id`|Gets the course with the specified course id|
-|`/user/:uid/course/create`|Creates a new course from POST data|
-|`/user/:uid/course/update`|Updates a course|
-|`/user/:uid/course/delete`|Deletes a course|
+|`/api/course/all`|Gets all courses associated with the user|
+|`/api/course/:id`|Gets the course with the specified course id|
+|`/api/course/create`|Creates a new course from POST data|
+|`/api/course/update`|Updates a course|
+|`/api/course/delete`|Deletes a course|
 
 **Assignment** (all require login)
 |API|Utility|
 |----|----|
-|`/user/:uid/assignment/all`|Gets all assignments associated with the user|
-|`/user/:uid/assignment/:id`|Gets the assignment with the specified assignment id|
-|`/user/:uid/assignment/create`|Creates a new assignment from POST data|
-|`/user/:uid/assignment/update`|Updates an assignment|
-|`/user/:uid/assignment/delete`|Deletes an assignment|
+|`/api/assignment/all`|Gets all assignments associated with the user|
+|`/api/assignment/:id`|Gets the assignment with the specified assignment id|
+|`/api/assignment/create`|Creates a new assignment from POST data|
+|`/api/assignment/update`|Updates an assignment|
+|`/api/assignment/delete`|Deletes an assignment|
 
 **Extracurricular** (all require login)
 |API|Utility|
 |----|----|
-|`/user/:uid/extracurricular/all`|Gets all extracurriculars associated with the user|
-|`/user/:uid/extracurricular/:id`|Gets the extracurricular with the specified extracurricular id|
-|`/user/:uid/extracurricular/create`|Creates a new extracurricular from POST data|
-|`/user/:uid/extracurricular/update`|Updates an extracurricular|
-|`/user/:uid/extracurricular/delete`|Deletes an extracurricular|
+|`/api/extracurricular/all`|Gets all extracurriculars associated with the user|
+|`/api/extracurricular/:id`|Gets the extracurricular with the specified extracurricular id|
+|`/api/extracurricular/create`|Creates a new extracurricular from POST data|
+|`/api/extracurricular/update`|Updates an extracurricular|
+|`/api/extracurricular/delete`|Deletes an extracurricular|
 
 **Exam** (all require login)
 |API|Utility|
 |----|----|
-|`/user/:uid/exam/all`|Gets all exams associated with the user|
-|`/user/:uid/exam/:id`|Gets the exam with the specified exam id|
-|`/user/:uid/exam/create`|Creates a new exam from POST data|
-|`/user/:uid/exam/update`|Updates a exam|
-|`/user/:uid/exam/delete`|Deletes a exam|
-
+|`/api/exam/all`|Gets all exams associated with the user|
+|`/api/exam/:id`|Gets the exam with the specified exam id|
+|`/api/exam/create`|Creates a new exam from POST data|
+|`/api/exam/update`|Updates an exam|
+|`/api//exam/delete`|Deletes an exam|
 
 ## Database ##
 ___
 The database structure is as follows:
 
+**Users**
+'id' is a unique identifier. 'name' is the user's name. 'hash' is a hashed version of the user's password.
+|id|name|hash|
+|---|---|---|
+|Unique identifier|User's name|Hashed password|
+
+**Exams**
+|id|uid|name|calendarData|
+|---|---|---|---|
+|Unique identifier|User ID - linked to Users|Name of exam|Data about when exam is|
+
+**Courses**
+|id|uid|name|calendarData|
+|---|---|---|---|
+|Unique identifier|User ID - linked to Users|Name of exam|Course times|
+
+**Extracurriculars**
+|id|uid|name|calendarData|note|
+|---|---|---|---|---|
+|Unique identifier|User ID - linked to Users|Name of e.c.|When it takes place|Note about e.c.|
+
+**Assignments**
+|id|uid|name|classID|note|timeToCompletion|
+|---|---|---|---|---|---|
+|Unique identifier|User ID - linked to Users|Name of assignment|Class ID - linked to Courses|Note about assignment|Estimated time to completion|
+
 ## URL Routes/Mappings ##
 ___
 ## Authentication/Authorization ##
+
+Things happen! You can log in. It works. For every URL call that you try to make, the function first verifies that the user who is allegedly making that call is logged in.
 ___
 ## Division of Labor ##
 ___
