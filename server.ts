@@ -297,10 +297,42 @@ export class Server {
   }
 
   private async RequestDeleteCourse(req : any, res : any) {
-    var response : object = {};
 
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(response))
+      var _uid = this.validateSessionAndGetUID(req);
+      if (_uid == null) {
+        res.end(JSON.stringify({status: 'unauthorized'}));
+        return;
+      }
+      var uid : number = _uid;
+
+      let response;
+
+      try {
+        var id : number = parseInt(req.params.id)
+
+        let course = await this.database.getCourse(id);
+
+        if (course == null || !this.checkAuthorization(uid, course.uid)) {
+          response = {
+            status: 'unauthorized'
+          };
+        } else {
+          await this.database.deleteCourse(id)
+          response = {
+            status: 'success'
+          }
+        }
+
+
+      } catch (e) {
+        response = {
+          status: 'failed',
+          message: e.message
+        }
+      }
+
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(response))
   }
 
   private async RequestUpdateCourse(req : any, res : any) {
@@ -584,14 +616,16 @@ export class Server {
       let startTime = pair.startTime;
       let assignment = pair.assignment;
 
+      let course : Course = await this.database.getCourse(assignment.courseId);
+
       let calendarEntry = {
         type: 'assignment',
         id: assignment.id,
         event: {
-          title: assignment.name,
+          title: '[' + course.title + '] ' + assignment.name,
           start: startTime,
-          end: startTime + assignment.ttc,
-          backgroundColor: colors[assignment.courseId] + '44',
+          end: startTime + (assignment.ttc * 3600 * 1000),
+          backgroundColor: colors[assignment.courseId] + '77',
           borderColor: colors[assignment.courseId]
         }
       }

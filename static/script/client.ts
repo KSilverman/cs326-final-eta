@@ -80,11 +80,11 @@ function setupDashboardCalendar() : void {
   var calendarEl = document.getElementById('calendar');
 
   calendar = new FullCalendar.Calendar(calendarEl, {
-    plugins: [ 'dayGrid' ],
-
-    // for week view
-    defaultView: 'dayGridWeek',
-    height: 320
+    plugins: [ 'timeGrid' ],
+    defaultView: 'timeGridWeek',
+    height: 400,
+    scrollTime: Date.now(),
+    slotDuration: '01:00:00'
   });
 
   calendar.render();
@@ -99,12 +99,15 @@ async function updateCalendar() : Promise<void> {
     return;
   }
 
+  calendar.removeAllEvents();
+
   var calendarElements = obj.calendar;
 
   if (!calendarElements) {
     console.error('Calendar response did not include elements');
     return;
   }
+
 
   for (var element of calendarElements) {
     calendar.addEvent(element.event)
@@ -242,8 +245,8 @@ async function createAssignment(name : string, due : number, ttc : number, cours
   let obj = await resp.json()
 
   if (obj.status == 'success') {
-    // TODO this is bad?
     updateAssignments()
+		updateCalendar()
   }
 }
 
@@ -257,7 +260,6 @@ async function deleteAssignment(id : number) {
   let obj = await resp.json()
 
   if (obj.status == 'success') {
-    // TODO this is bad?
     updateAssignments()
   }
 }

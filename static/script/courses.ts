@@ -51,13 +51,14 @@ async function getCourses() : Promise<void>
 		else
 		{
 			console.log("Courses found");
-			let courses: string = "";
+			let courseHtml: string = "";
 			for(let i: number = 0; i < j.courses.length; i++)
 			{
-				courses += '<li class="list-group-item d-flex justify-content-between"> <b>'+j.courses[i].title+'</b><button type="button" class="btn btn-danger btn-sm">Remove</button></li>';
+				courseHtml += '<li class="list-group-item d-flex justify-content-between"> <b>'+j.courses[i].title+'</b>';
+				courseHtml += `<button type="button" class="btn btn-danger btn-sm" onclick="deleteCourseButtion(${j.courses[i].id})">Remove</button></li>`;
 			}
-			courses += '<li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button></li>';
-			course_list.innerHTML = courses;
+			courseHtml += '<li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button></li>';
+			course_list.innerHTML = courseHtml;
 		}
 		let course_picks: string = "";
 		for(let i: number = 0; i < j.courses.length; i++)
@@ -85,6 +86,7 @@ async function createCourse(name : string) {
 
   if (obj.status == 'success') {
 		getCourses()
+		updateCalendar()
   }
 }
 
@@ -95,4 +97,21 @@ function createCourseButton() {
 	if (name) {
 		createCourse(name)
 	}
+}
+
+
+
+async function deleteCourse(id : number) {
+  var resp = await postData('/api/course/' + id + '/delete', {});
+
+  let obj = await resp.json()
+
+  if (obj.status == 'success') {
+    getCourses()
+		updateCalendar()
+  }
+}
+
+function deleteCourseButtion(id : number) {
+	deleteCourse(id)
 }

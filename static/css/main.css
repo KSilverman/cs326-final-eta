@@ -23,10 +23,11 @@ body {
 }
 
 .module {
-	border-radius: 10px;
+	border-radius: 5px;
 	background-color: rgb(235, 239, 242) !important;
 	color: black;
 	box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 3px;
+	height: 100%;
 }
 
 .line {
