@@ -46,7 +46,7 @@ async function getCourses() : Promise<void>
 		if(j.courses.length == 0)
 		{
 			console.log("No courses found ");
-			course_list.innerHTML = '<li class="list-group-item d-flex justify-content-between"> <b>No Courses Found</b></li><li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button></li>';
+			course_list.innerHTML = '<li class="list-group-item d-flex justify-content-center">No Courses. Add one below!</li><li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Course</button></li>';
 		}
 		else
 		{
@@ -57,7 +57,7 @@ async function getCourses() : Promise<void>
 				courseHtml += '<li class="list-group-item d-flex justify-content-between"> <b>'+j.courses[i].title+'</b>';
 				courseHtml += `<button type="button" class="btn btn-danger btn-sm" onclick="deleteCourseButtion(${j.courses[i].id})">Remove</button></li>`;
 			}
-			courseHtml += '<li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Class</button></li>';
+			courseHtml += '<li class="list-group-item d-flex justify-content-center"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addClass">Add Course</button></li>';
 			course_list.innerHTML = courseHtml;
 		}
 		let course_picks: string = "";
@@ -114,4 +114,10 @@ async function deleteCourse(id : number) {
 
 function deleteCourseButtion(id : number) {
 	deleteCourse(id)
+}
+
+function showDiscussionSection() {
+  let discussionCheckbox = document.getElementById('class-has-discussion') as HTMLInputElement;
+  let discussionElement = document.getElementById('class-discussion-options') as HTMLInputElement;
+	discussionElement.style.display = discussionCheckbox.checked ? '' : 'none' ;
 }

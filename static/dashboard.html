@@ -46,7 +46,7 @@
 				<div class="col-sm-2 px-0 pl-2">
 					<div class="module">
 						<div class="row">
-							<div class="col text-center mt-3 h4">Classes</div>
+							<div class="col text-center mt-3 h4">Courses</div>
 						</div>
 						<div class="row"><div class="col-10 line my-3 mx-auto"></div></div>
 						<div class="row">
@@ -108,7 +108,59 @@
 			          <div class="form-group">
 			            <label for="class-name" class="col-form-label">Class Name:</label>
 			            <input type="text" class="form-control" id="class-name">
+
 			          </div>
+
+								<div class="form-group">
+									<label for="class-day-0">M</label>
+									<input type="checkbox" id="class-mon"/>
+
+									<label for="class-day-1">Tu</label>
+									<input type="checkbox" />
+
+									<label for="class-day-2">W</label>
+									<input type="checkbox" />
+
+									<label for="class-day-3">Th</label>
+									<input type="checkbox" />
+
+									<label for="class-day-4">F</label>
+									<input type="checkbox" />
+
+									<label for="class-day-5">Sa</label>
+									<input type="checkbox" />
+
+									<label for="class-day-6">Su</label>
+									<input type="checkbox" />
+								</div>
+
+			          <div class="form-group">
+			            <label for="class-time" class="col-form-label">Class Time:</label>
+			            <input type="time" class="form-control" id="class-time">
+			          </div>
+
+								<div class="form-group">
+			            <label for="class-has-discussion" class="col-form-label">Has Discussion Section:</label>
+			            <input type="checkbox" id="class-has-discussion" onchange="showDiscussionSection()">
+			          </div>
+
+								<div id="class-discussion-options" style="display:none">
+									<div class="form-group">
+				            <label for="class-time" class="col-form-label">Discussion Time:</label>
+				            <input type="time" class="form-control" id="class-time">
+				          </div>
+
+									<div class="form-group">
+				            <label for="class-time" class="col-form-label">Discussion Day:</label>
+										<select class="form-control" id="class-pick">
+				            	  <!--<option>CS 326</option>
+							      <option>CS 490S</option>
+							      <option>CS 520</option>
+							      <option>COMP-LIT 131</option>
+							      <option>ECON 311</option>-->
+				            </select>
+									</div>
+								</div>
 			        </form>
 			      </div>
 			      <div class="modal-footer">
