@@ -868,7 +868,7 @@ export class Server {
     }
 
     timeBlocks.sort((a, b) => {
-      return b.end - a.end;
+      return a.end - b.end;
     });
 
     let res : any[] = [];
