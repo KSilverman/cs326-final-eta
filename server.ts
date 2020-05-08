@@ -683,19 +683,142 @@ export class Server {
   }
 
   private async RequestGetExtracurricular(req : any, res : any) {
+    var response : object;
 
+    try {
+      let id = req.body.id;
+      let uid = req.session.uid;
+
+      let ec : Extracurricular = await this.database.getEC(id)
+
+      if (!this.checkAuthorization(ec.uid, uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+        response = {
+          status: 'success',
+          extracurricular: ec.objectify()
+        };
+      }
+    } catch (e) {
+      response = {
+        status: 'error',
+        error: e.message
+      }
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestCreateExtracurricular(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+
+    try {
+      var name = req.body.name;
+      var calendarData = req.body.calendarData;
+
+      let ec : Extracurricular = await this.database.createEC(uid, name, calendarData);
+
+      response = {
+        status: 'success',
+        extracurricular: ec.objectify()
+      }
+    } catch (e) {
+      response = {
+        status: 'failed',
+        message: e.message
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestDeleteExtracurricular(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+
+    try {
+      var id : number = parseInt(req.params.id)
+
+      let ec : Extracurricular = await this.database.getEC(id);
+
+      if (ec == null || !this.checkAuthorization(uid, ec.uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+        await this.database.deleteEC(id)
+        response = {
+          status: 'success'
+        }
+      }
+
+
+    } catch (e) {
+      response = {
+        status: 'failed',
+        message: e.message
+      }
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestUpdateExtracurricular(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+    try {
+      let id  : number = parseInt(req.params.id);
+
+      let ec : Extracurricular = await this.database.getEC(id);
+
+      if (ec == null || !this.checkAuthorization(uid, ec.uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+
+        if (req.body.name !== undefined) ec.name = req.body.name;
+        if (req.body.calendarData !== undefined) ec.calendarData = req.body.calendarData;
+
+
+        await this.database.putEC(ec)
+        response = {
+          status: 'success',
+          extracurricular: ec.objectify()
+        }
+      }
+
+    } catch(e) {
+      response = {
+        status: 'error',
+        message: e.message
+      }
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestGetCalendar(req : any, res : any) {

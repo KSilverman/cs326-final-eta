@@ -309,10 +309,10 @@ export class Database {
     return id;
   }
 
-  public async createEC(uid : number, name : string, calendarData : object[], note : string) : Promise<Extracurricular> {
+  public async createEC(uid : number, name : string, calendarData : any) : Promise<Extracurricular> {
     let id = await this.getNextECId();
 
-    let ec : Extracurricular = new Extracurricular(calendarData, name, note, id, uid);
+    let ec : Extracurricular = new Extracurricular(id, uid, name, calendarData);
     await this.putEC(ec);
 
     return ec;
@@ -345,9 +345,20 @@ export class Database {
       }
     );
 
-    let ec : Extracurricular = new Extracurricular(res.times, res.name, res.note, res.uid, res.id);
+    let ec : Extracurricular = new Extracurricular(res.id, res.uid, res.name, res.calendarData);
 
     return ec;
+  }
+
+  public async deleteEC(id : number) : Promise<void> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('extracurriculars');
+
+    let res = await collection.remove(
+      {
+        id: id,
+      }
+    );
   }
 
   public async getECForUser(uid : number) : Promise<Extracurricular[]> {
@@ -365,7 +376,7 @@ export class Database {
 
       let results = await result.toArray()
       for (let res of results) {
-        let ec : Extracurricular = new Extracurricular(res.times, res.name, res.note, res.uid, res.id);
+        let ec : Extracurricular = new Extracurricular(res.id, res.uid, res.name, res.calendarData);
         extracurriculars.push(ec)
       }
 
