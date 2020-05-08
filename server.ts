@@ -261,9 +261,11 @@ export class Server {
     try {
 
       let name = req.body.name;
+      let calendarData = req.body.calendarData;
+      let discussionCalendarData = req.body.discussionCalendarData;
 
       if (name) {
-        let course : Course = await this.database.createCourse(uid, name, [])
+        let course : Course = await this.database.createCourse(uid, name, calendarData, discussionCalendarData)
 
         response = {
           status: 'success',
@@ -594,10 +596,36 @@ export class Server {
 
     let calendarEvents = [];
 
-    let exams = await this.database.getExamsForUser(uid);
+    let exams            = await this.database.getExamsForUser(uid);
     // let extracurriculars = await this.database.getExtracurricularsForUser(uid);
     let assignments      = await this.database.getAssignmentsForUser(uid);
-    // let courses          = await this.database.getCoursesForUser(uid);
+    let courses          = await this.database.getCoursesForUser(uid);
+
+    let colors = ['#fd588d', '#fd8a5e', '#f6eb52', '#46ddf2', '#10ccbc']
+
+    for (let course of courses) {
+      let event : any = Object.assign({}, course.calendarData)
+      event.title = course.title;
+      event.color = colors[course.id % 5];
+
+      calendarEvents.push({
+        type: 'course',
+        id: course.id,
+        event: event
+      })
+
+      if (course.discussionCalendarData) {
+        let dEvent : any = Object.assign({}, course.discussionCalendarData)
+        dEvent.title = course.title + ' Discussion';
+        dEvent.color = colors[course.id % 5];
+
+        calendarEvents.push({
+          type: 'course',
+          id: course.id,
+          event: dEvent
+        })
+      }
+    }
 
     for (let exam of exams) {
       let calendarEntry = {
@@ -608,8 +636,6 @@ export class Server {
 
       calendarEvents.push(calendarEntry)
     }
-
-    let colors = ['#fd588d', '#fd8a5e', '#f6eb52', '#46ddf2', '#10ccbc']
 
     let assignmentTimePairs = this.getAssignmentStartTimes(assignments, []);
     for (let pair of assignmentTimePairs) {
@@ -625,8 +651,8 @@ export class Server {
           title: '[' + course.title + '] ' + assignment.name,
           start: startTime,
           end: startTime + (assignment.ttc * 3600 * 1000),
-          backgroundColor: colors[assignment.courseId] + '77',
-          borderColor: colors[assignment.courseId]
+          backgroundColor: colors[assignment.courseId % 5] + '77',
+          borderColor: colors[assignment.courseId % 5]
         }
       }
 

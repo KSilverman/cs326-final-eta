@@ -112,31 +112,36 @@
 			          </div>
 
 								<div class="form-group">
-									<label for="class-day-0">M</label>
-									<input type="checkbox" id="class-mon"/>
+									<label for="class-day-1" style="margin-left: 10px;">M</label>
+									<input type="checkbox" id="class-day-1"/>
 
-									<label for="class-day-1">Tu</label>
-									<input type="checkbox" />
+									<label for="class-day-2" style="margin-left: 10px;">Tu</label>
+									<input type="checkbox" id="class-day-2"/>
 
-									<label for="class-day-2">W</label>
-									<input type="checkbox" />
+									<label for="class-day-3" style="margin-left: 10px;">W</label>
+									<input type="checkbox" id="class-day-3"/>
 
-									<label for="class-day-3">Th</label>
-									<input type="checkbox" />
+									<label for="class-day-4" style="margin-left: 10px;">Th</label>
+									<input type="checkbox" id="class-day-4"/>
 
-									<label for="class-day-4">F</label>
-									<input type="checkbox" />
+									<label for="class-day-5" style="margin-left: 10px;">F</label>
+									<input type="checkbox" id="class-day-5"/>
 
-									<label for="class-day-5">Sa</label>
-									<input type="checkbox" />
+									<label for="class-day-6" style="margin-left: 10px;">Sa</label>
+									<input type="checkbox" id="class-day-6"/>
 
-									<label for="class-day-6">Su</label>
-									<input type="checkbox" />
+									<label for="class-day-0" style="margin-left: 10px;">Su</label>
+									<input type="checkbox" id="class-day-0"/>
 								</div>
 
 			          <div class="form-group">
-			            <label for="class-time" class="col-form-label">Class Time:</label>
-			            <input type="time" class="form-control" id="class-time">
+			            <label for="class-start" class="col-form-label">Class Start:</label>
+			            <input type="time" class="form-control" id="class-start">
+			          </div>
+
+								<div class="form-group">
+			            <label for="class-end" class="col-form-label">Class End:</label>
+			            <input type="time" class="form-control" id="class-end">
 			          </div>
 
 								<div class="form-group">
@@ -146,18 +151,25 @@
 
 								<div id="class-discussion-options" style="display:none">
 									<div class="form-group">
-				            <label for="class-time" class="col-form-label">Discussion Time:</label>
-				            <input type="time" class="form-control" id="class-time">
+				            <label for="class-discussion-start" class="col-form-label">Discussion Start:</label>
+				            <input type="time" class="form-control" id="class-discussion-start">
 				          </div>
 
 									<div class="form-group">
-				            <label for="class-time" class="col-form-label">Discussion Day:</label>
-										<select class="form-control" id="class-pick">
-				            	  <!--<option>CS 326</option>
-							      <option>CS 490S</option>
-							      <option>CS 520</option>
-							      <option>COMP-LIT 131</option>
-							      <option>ECON 311</option>-->
+				            <label for="class-discussion-end" class="col-form-label">Discussion End:</label>
+				            <input type="time" class="form-control" id="class-discussion-end">
+				          </div>
+
+									<div class="form-group">
+				            <label for="class-discussion-day" class="col-form-label">Discussion Day:</label>
+										<select class="form-control" id="class-discussion-day">
+			            	  <option value="1">Monday</option>
+			            	  <option value="2">Tuesday</option>
+			            	  <option value="3">Wednesday</option>
+			            	  <option value="4">Thursday</option>
+			            	  <option value="5">Friday</option>
+			            	  <option value="6">Saturday</option>
+			            	  <option value="0">Sunday</option>
 				            </select>
 									</div>
 								</div>
