@@ -99,12 +99,15 @@ async function updateCalendar() : Promise<void> {
     return;
   }
 
+  calendar.removeAllEvents();
+
   var calendarElements = obj.calendar;
 
   if (!calendarElements) {
     console.error('Calendar response did not include elements');
     return;
   }
+
 
   for (var element of calendarElements) {
     calendar.addEvent(element.event)
@@ -242,8 +245,8 @@ async function createAssignment(name : string, due : number, ttc : number, cours
   let obj = await resp.json()
 
   if (obj.status == 'success') {
-    // TODO this is bad?
     updateAssignments()
+		updateCalendar()
   }
 }
 
@@ -257,7 +260,6 @@ async function deleteAssignment(id : number) {
   let obj = await resp.json()
 
   if (obj.status == 'success') {
-    // TODO this is bad?
     updateAssignments()
   }
 }

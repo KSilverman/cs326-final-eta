@@ -258,6 +258,25 @@ export class Database {
     return course;
   }
 
+  public async deleteCourse(id : number) : Promise<void> {
+    let db = this.client.db(this.dbName);
+    let collection = db.collection('courses');
+
+    let res = await collection.remove(
+      {
+        id: id,
+      }
+    );
+
+    let collection2 = db.collection('assignments');
+
+    let res2 = await collection2.remove(
+      {
+        courseId: id,
+      }
+    );
+  }
+
   public async getCoursesForUser(uid : number) : Promise<Course[]> {
     let db = this.client.db(this.dbName);
     let collection = db.collection('courses');
