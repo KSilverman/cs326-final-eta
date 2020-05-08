@@ -340,7 +340,6 @@ export class Server {
   private async RequestUpdateCourse(req : any, res : any) {
     var response : object = {};
 
-
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
@@ -504,8 +503,7 @@ export class Server {
       } else {
         await this.database.deleteAssignment(id)
         response = {
-          status: 'success',
-          assignment: assignment.objectify()
+          status: 'success'
         }
       }
 
@@ -522,7 +520,48 @@ export class Server {
   }
 
   private async RequestUpdateAssignment(req : any, res : any) {
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
+    
+    let response;
+    try {
+      let id = req.params.id;
 
+      let assignment = await this.database.getAssignment(id);
+
+      if (assignment == null || !this.checkAuthorization(uid, assignment.uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+
+        if (req.body.courseId) assignment.courseId = req.body.courseId;
+
+        if (req.body.name !== undefined) assignment.name = req.body.name;
+        if (req.body.note !== undefined) assignment.note = req.body.note;
+
+        if (req.body.due !== undefined) assignment.due = req.body.due;
+        if (req.body.ttc !== undefined) assignment.ttc = req.body.ttc;
+
+        if (req.body.completed !== undefined) assignment.completed = req.body.completed;
+
+
+        await this.database.putAssignment(assignment)
+        response = {
+          status: 'success',
+          assignment: assignment.objectify()
+        }
+      }
+
+    } catch(e) {
+
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestGetAllExams(req : any, res : any) {
@@ -648,6 +687,7 @@ export class Server {
 
     let uid = req.session.uid;
 
+    // items to be rendered by FullCalendar
     let calendarEvents = [];
 
     let exams            = await this.database.getExamsForUser(uid);
@@ -655,7 +695,12 @@ export class Server {
     let assignments      = await this.database.getAssignmentsForUser(uid);
     let courses          = await this.database.getCoursesForUser(uid);
 
+    // colors by course mod 5
     let colors = ['#fd588d', '#fd8a5e', '#f6eb52', '#46ddf2', '#10ccbc']
+
+
+    // times where assignment work cannot be scheduled by the assignment scheduling algo
+    let timeBlocks = {};
 
     for (let course of courses) {
       let event : any = Object.assign({}, course.calendarData)
@@ -690,6 +735,8 @@ export class Server {
 
       calendarEvents.push(calendarEntry)
     }
+
+
 
     let assignmentTimePairs = this.getAssignmentStartTimes(assignments, []);
     for (let pair of assignmentTimePairs) {
