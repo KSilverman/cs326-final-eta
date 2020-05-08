@@ -79,13 +79,17 @@ async function setupLargeCalendar() : Promise<void> {
 function setupDashboardCalendar() : void {
   var calendarEl = document.getElementById('calendar');
 
+  let currentTime = new Date();
+  let currentTimeStr = `${currentTime.getHours()}:${currentTime.getMinutes()}`
+
   calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: [ 'timeGrid' ],
     defaultView: 'timeGridWeek',
     height: 400,
-    scrollTime: Date.now(),
+    scrollTime: currentTimeStr,
     slotDuration: '00:30:00',
-    allDaySlot: false
+    allDaySlot: false,
+    nowIndicator: true
   });
 
   calendar.render();
