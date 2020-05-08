@@ -375,7 +375,7 @@ function editAssignmentButton(id : number) {
 
   let add_ass_btn : any = document.getElementById('add_ass_btn');
   add_ass_btn.style.display = "none";
-  
+
   let save_ass_btn : any = document.getElementById('save_ass_btn');
   save_ass_btn.style.display = "inline-block";
 
@@ -392,6 +392,7 @@ function editAssignmentButton(id : number) {
   if (assignment == undefined) return;
 
   let dueDate = new Date(assignment.due);
+  dueDate.setMinutes(dueDate.getMinutes() - dueDate.getTimezoneOffset())
 
   nameElement.value = assignment.name
   classElement.value = assignment.course
