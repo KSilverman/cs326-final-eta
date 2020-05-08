@@ -343,7 +343,10 @@ async function editAssignment(assId: string, name : string, due : number, ttc : 
 }
 
 // populates moda with existing info
+let currentEdittingAssignment = null;
 function editAssignmentButton(id : number) {
+  currentEdittingAssignment = id;
+
   let nameElement = document.getElementById('assignment-name') as HTMLInputElement;
   let classElement = document.getElementById('class-pick') as HTMLInputElement;
   let dateElement = document.getElementById('date') as HTMLInputElement;
@@ -365,6 +368,30 @@ function editAssignmentButton(id : number) {
   notesElement.value = assignment.note;
 
   showAss();
+}
+
+function saveAssignmentUpdate() {
+  let id = currentEdittingAssignment;
+
+  let nameElement = document.getElementById('assignment-name') as HTMLInputElement;
+  let classElement = document.getElementById('class-pick') as HTMLInputElement;
+  let dateElement = document.getElementById('date') as HTMLInputElement;
+  let timeElement = document.getElementById('time') as HTMLInputElement;
+  let ttcElement = document.getElementById('ttc') as HTMLInputElement;
+  let notesElement = document.getElementById('notes') as HTMLInputElement;
+
+  let date = dateElement.value;
+  let time = timeElement.value;
+
+  let due = Date.parse(date + ' ' + time)
+
+  let name = nameElement.value;
+  let course = parseInt(classElement.value) || 3;
+  // let due = 0;//dueElement.value;
+  let ttc = parseInt(ttcElement.value) || 1;
+  let notes = notesElement.value;
+
+  editAssignment(id, name, due, ttc, course, notes)
 }
 
 function deleteAssignmentButton(id : number) {

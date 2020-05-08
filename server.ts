@@ -838,7 +838,7 @@ export class Server {
       console.log(dayOfWeek)
 
       if (eventData.daysOfWeek.map((x : any) => parseInt(x)).includes(dayOfWeek)) {
-        console.log('today!')
+        
         // this is jank
         let startString = day.toDateString() + ' ' + eventData.start
         let startDate = new Date(startString)
