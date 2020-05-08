@@ -298,9 +298,6 @@ async function createExam(name : string, courseId : number, startTime : string, 
   }
 }
 
-<<<<<<< HEAD
-function clearActivePanels()
-=======
 async function deleteExam(id : number) {
   var resp = await postData('/api/exam/' + id + '/delete', {});
 
@@ -311,9 +308,8 @@ async function deleteExam(id : number) {
     updateCalendar()
   }
 }
-/*
-function getOrderedAssignmentsWithCats(list : any[]) : any[]
->>>>>>> f57594a227a82ceb9631a7253494c1bb7dae9714
+
+function clearActivePanels()
 {
   let panels : any = document.getElementById('panels');
   for(let p of panels.childNodes)
@@ -335,22 +331,22 @@ function showAss()
 function showEcs()
 {
   clearActivePanels();
-  let assPanel : any = document.getElementById('extracurriculars');
-  assPanel.classList.add("active");
+  let ecsPanel : any = document.getElementById('extracurriculars');
+  ecsPanel.classList.add("active");
 }
 
 function showExs()
 {
   clearActivePanels();
-  let assPanel : any = document.getElementById('exams');
-  assPanel.classList.add("active");
+  let exsPanel : any = document.getElementById('exams');
+  exsPanel.classList.add("active");
 }
 
 function showComp()
 {
   clearActivePanels();
-  let assPanel : any = document.getElementById('completed');
-  assPanel.classList.add("active");
+  let compPanel : any = document.getElementById('completed');
+  compPanel.classList.add("active");
 }
 
 // NEW: helper method for posting data
