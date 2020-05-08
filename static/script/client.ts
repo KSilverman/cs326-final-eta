@@ -84,7 +84,8 @@ function setupDashboardCalendar() : void {
     defaultView: 'timeGridWeek',
     height: 400,
     scrollTime: Date.now(),
-    slotDuration: '01:00:00'
+    slotDuration: '00:30:00',
+    allDaySlot: false
   });
 
   calendar.render();
