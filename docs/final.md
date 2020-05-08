@@ -22,17 +22,26 @@ PlanIt's user interface strives to be as user-friendly as possible. After loggin
 ### Login ###
 This is where you log into your PlanIt account. Click register after entering a username and password to create an account and click login to enter.
 
-pic
+Login screen | Registered account!
+:------------:|:------------------:
+![login](https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/final-login.PNG) | ![reg](https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/final-login-registered.PNG)
 
 ### Dashboard ###
 This is your home page on PlanIt. At the top of the page you see a calendar which has your schedule on it as well as due dates. Look further down and see your feed with all the assignments you have entered, sorted by optimal completion order with all the information you need at a glance. To your right, you can add or delete courses.
 
-pic
+![dash](https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/final-dash.PNG)
 
 ### Add/Delete/Edit ###
 Here, we have a modal pop up and present an easy way to enter all your information. Add and edit both pop up the same type of field to maintain a consistent design. The red delete button will remove your assignment from the database.
 
-pic
+Course| Assignment | Extra-curricular | Exam
+:----:|:----------:|:----------------:|:----:
+![courseAdd][course]|![assignmentAdd][ass]|![extracurricAdd][ec]|![examAdd][exam]
+
+[course]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/final-addcourse.PNG "course"
+[ass]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/final-addassignment.PNG "ass"
+[ec]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/final-addec.PNG "ec"
+[exam]: https://github.com/KSilverman/cs326-final-eta/blob/master/static/img/final-addexam.PNG "exam"
 
 ## APIs ##
 ___
@@ -85,7 +94,6 @@ ___
 The database structure is as follows:
 
 **Users**
-'id' is a unique identifier. 'name' is the user's name. 'hash' is a hashed version of the user's password.
 |id|name|hash|
 |---|---|---|
 |Unique identifier|User's name|Hashed password|
@@ -93,7 +101,7 @@ The database structure is as follows:
 **Exams**
 |id|uid|name|calendarData|
 |---|---|---|---|
-|Unique identifier|User ID - linked to Users|Name of exam|Data about when exam is|
+|Unique identifier|User ID - linked to Users|Name of exam|When exam is|
 
 **Courses**
 |id|uid|name|calendarData|
@@ -118,5 +126,11 @@ Things happen! You can log in. It works. For every URL call that you try to make
 ___
 ## Division of Labor ##
 ___
+Kyle --
+
+Devon -- 
+
+Artem -- Helped brainstorm overall format and layout of site. Found icon. Made index.html. Populated skeleton code in types folder. Populated functions in database.ts. Populated functions in server.ts. Did this write-up.
+
 ## Conclusion ##
 ___
