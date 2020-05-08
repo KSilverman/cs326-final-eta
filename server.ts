@@ -1048,7 +1048,10 @@ export class Server {
         assignment: assignment
       }
 
+      if (startTime < Date.now()) break;
+      
       res.push(pair)
+
     }
 
     return res;
