@@ -130,7 +130,7 @@ The user's password is stored as a hash in the database, in the user table under
 ___
 Kyle -- Group Big Guy, did lots of big guy stuff. 
 
-Devon -- Another group Big Guy. Did plenty of big guy stuff himself.
+Devon -- Database, Calendar system, User authentication and session, User/Assignment/Courses CRUD frontend and backend, Extracurricular/Exam CRUD backend, Server routing and responses, scheduling algorithm
 
 Artem -- Helped brainstorm overall format and layout of site. Found icon. Made index.html. Populated skeleton code in types folder. Populated functions in database.ts. Populated functions in server.ts. Did this write-up.
 
