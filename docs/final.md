@@ -121,9 +121,11 @@ The database structure is as follows:
 ## URL Routes/Mappings ##
 ___
 ## Authentication/Authorization ##
-
-Things happen! You can log in. It works. For every URL call that you try to make, the function first verifies that the user who is allegedly making that call is logged in.
 ___
+Users are authenticated by entering their username and password in the login page. After the information is confirmed, a session is created. This active session is required to access any information pertaining to the user - their calendar, their events, their exams. Every call to the database is preceded by a check to ensure that the `_uid` session is active.
+
+The user's password is stored as a hash in the database, in the user table under 'hash'.
+
 ## Division of Labor ##
 ___
 Kyle -- Group Big Guy, did lots of big guy stuff. 

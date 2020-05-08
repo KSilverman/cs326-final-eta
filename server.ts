@@ -58,17 +58,8 @@ export class Server {
     this.app.use('/img', express.static('static/img'));
     this.app.use('/script', express.static('static/script'));
 
-    // API stuff
-
     this.app.use(express.json())
-    /*
-    this.app.use(function (req : any, res : any, next : any) {
-      if (!req.session.uid) {
-        req.session.uid = {};
-        console.log(req.session);
-     }
-   });
-*/
+
     this.app.post('/user/register', this.RequestRegister.bind(this))
     this.app.post('/user/login', this.RequestLogin.bind(this))
 
@@ -113,12 +104,9 @@ export class Server {
   }
 
   private validateSessionAndGetUID(req : any) : number | null {
-    console.log(req.session);
     if (req.session.uid !== null) {
-      console.log("good")
       return req.session.uid
     } else {
-      console.log("bad")
       return null;
     }
   }
@@ -154,7 +142,6 @@ export class Server {
         };
       }
     } catch (e) {
-      console.log(e)
       response = {
         status: 'error'
       };
@@ -174,8 +161,6 @@ export class Server {
     let hash = await User.createHash(req.body.password)
 
     let user = await this.database.getUserByName(name)
-
-    console.log(user)
 
     if (user != null) {
       if (await user.checkHash(req.body.password)) {
@@ -206,7 +191,6 @@ export class Server {
         'user': user.objectify()
       }
     } catch(e) {
-      console.log(e)
       response = {
         'status': 'failed',
         'error': 'Unable to get ' + req.params.uid
@@ -218,7 +202,6 @@ export class Server {
   }
 
   private async RequestGetAllCourses(req : any, res : any) {
-    //console.log(req);
     var _uid = this.validateSessionAndGetUID(req);
     if (_uid == null) {
       res.end(JSON.stringify({status: 'unauthorized'}));
@@ -409,8 +392,6 @@ export class Server {
     tomorrowEnd.setMilliseconds(0)
     tomorrowEnd.setDate(tomorrowEnd.getDate() + 1)
 
-    console.log(tomorrowEnd.getTime())
-
     let tomorrowEndTime = tomorrowEnd.getTime()
 
     let thisWeekEnd = new Date(today);
@@ -562,7 +543,7 @@ export class Server {
 
     let response;
     try {
-      let id = req.params.id;
+      let id  : number = parseInt(req.params.id);
 
       let assignment = await this.database.getAssignment(id);
 
@@ -591,14 +572,16 @@ export class Server {
       }
 
     } catch(e) {
-
+      response = {
+        status: 'error',
+        message: e.message
+      }
     }
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
 
   private async RequestGetAllExams(req : any, res : any) {
-    //console.log(req);
     var _uid = this.validateSessionAndGetUID(req);
     if (_uid == null) {
       res.end(JSON.stringify({status: 'unauthorized'}));
@@ -670,7 +653,6 @@ export class Server {
   }
 
   private async RequestGetAllExtracurriculars(req : any, res : any) {
-    //console.log(req);
     var _uid = this.validateSessionAndGetUID(req);
     if (_uid == null) {
       res.end(JSON.stringify({status: 'unauthorized'}));
@@ -831,14 +813,11 @@ export class Server {
 
     // need every occurance of the event between now and lastAssignmentDue
     while (day.getTime() < lastAssignmentDue) {
-      console.log(day.toDateString())
 
       let dayOfWeek = day.getDay()
 
-      console.log(dayOfWeek)
-
       if (eventData.daysOfWeek.map((x : any) => parseInt(x)).includes(dayOfWeek)) {
-        
+
         // this is jank
         let startString = day.toDateString() + ' ' + eventData.start
         let startDate = new Date(startString)
@@ -889,7 +868,7 @@ export class Server {
     }
 
     timeBlocks.sort((a, b) => {
-      return b.end - a.end;
+      return a.end - b.end;
     });
 
     let res : any[] = [];
