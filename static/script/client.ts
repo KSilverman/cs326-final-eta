@@ -193,7 +193,7 @@ async function updateAssignments() : Promise<void> {
       html += '<td>' + expectedTTC + '</td>'
       html += '<td>' + notes + '</td>'
       html += '<td><button type="button" class="btn btn-success btn-sm" title="Completed">&#10004;</button>';
-      html += '<button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editAssignmentButton(' + assignment.id + ')">&#9997;</button>';
+      html += '<button type="button" class="btn btn-primary btn-sm" title="Edit" data-toggle="modal" data-target="#addAss" onclick="editAssignmentButton(' + assignment.id + ')">&#9997;</button>';
       html += '<button type="button" class="btn btn-danger btn-sm" title="Remove" onclick="deleteAssignmentButton(' + assignment.id + ')">&#10006;</button></td></tr>';
     }
 
@@ -205,7 +205,33 @@ async function updateAssignments() : Promise<void> {
   assignmentContainer.innerHTML = html;
 }
 
+function doAssModal() {
+  let nameElement = document.getElementById('assignment-name') as HTMLInputElement;
+  let classElement = document.getElementById('class-pick') as HTMLInputElement;
+  let dateElement = document.getElementById('date') as HTMLInputElement;
+  let timeElement = document.getElementById('time') as HTMLInputElement;
+  let ttcElement = document.getElementById('ttc') as HTMLInputElement;
+  let notesElement = document.getElementById('notes') as HTMLInputElement;
+
+  nameElement.value = "";
+  classElement.value = "";
+  dateElement.value = "";
+  timeElement.value = "";
+  ttcElement.value = "";
+  notesElement.value = "";
+
+  let save_ass_btn : any = document.getElementById('save_ass_btn');
+  save_ass_btn.style.display = "none";
+
+  let add_ass_btn : any = document.getElementById('add_ass_btn');
+  add_ass_btn.style.display = "inline-block";
+}
+
 function createAssignmentButton() {
+
+  let save_ass_btn : any = document.getElementById('save_ass_btn');
+  save_ass_btn.style.display = "none";
+
   let nameElement = document.getElementById('assignment-name') as HTMLInputElement;
   let classElement = document.getElementById('class-pick') as HTMLInputElement;
   let dateElement = document.getElementById('date') as HTMLInputElement;
@@ -347,6 +373,13 @@ let currentEdittingAssignment : any = null;
 function editAssignmentButton(id : number) {
   currentEdittingAssignment = id;
 
+  let add_ass_btn : any = document.getElementById('add_ass_btn');
+  add_ass_btn.style.display = "none";
+  
+  let save_ass_btn : any = document.getElementById('save_ass_btn');
+  save_ass_btn.style.display = "inline-block";
+
+
   let nameElement = document.getElementById('assignment-name') as HTMLInputElement;
   let classElement = document.getElementById('class-pick') as HTMLInputElement;
   let dateElement = document.getElementById('date') as HTMLInputElement;
@@ -391,7 +424,7 @@ function saveAssignmentUpdate() {
   let ttc = parseInt(ttcElement.value) || 1;
   let notes = notesElement.value;
 
-  editAssignment(id, name, due, ttc, course, notes)
+  editAssignment(id, name, due, ttc, course, notes);
 }
 
 function deleteAssignmentButton(id : number) {
