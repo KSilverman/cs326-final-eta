@@ -42,6 +42,8 @@ ___
 |`/user/register`|POST registration data|
 |`/user/login`|POST login info|
 |`/user/:uid`|Gets user data of user with id `uid`|
+|`/user/:uid/calendar`|Returns the events to populate the calendar with (when logged in)|
+
 **Course**
 |API|Utility|
 |----|----|
@@ -50,6 +52,7 @@ ___
 |`/user/:uid/course/create`|Creates a new course from POST data|
 |`/user/:uid/course/update`|Updates a course|
 |`/user/:uid/course/delete`|Deletes a course|
+
 **Assignment**
 |API|Utility|
 |----|----|
@@ -58,6 +61,7 @@ ___
 |`/user/:uid/assignment/create`|Creates a new assignment from POST data|
 |`/user/:uid/assignment/update`|Updates an assignment|
 |`/user/:uid/assignment/delete`|Deletes an assignment|
+
 **Extracurricular**
 |API|Utility|
 |----|----|
@@ -75,10 +79,6 @@ ___
 |`/user/:uid/exam/create`|Creates a new exam from POST data|
 |`/user/:uid/exam/update`|Updates a exam|
 |`/user/:uid/exam/delete`|Deletes a exam|
-**Misc**
-|API|Utility|
-|----|----|
-|`/user/:uid/calendar`|Returns the events to populate the calendar with|
 
 
 ## Database ##
