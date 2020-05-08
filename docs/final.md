@@ -106,7 +106,7 @@ The database structure is as follows:
 **Courses**
 |id|uid|name|calendarData|
 |---|---|---|---|
-|Unique identifier|User ID - linked to Users|Name of exam|Course times|
+|Unique identifier|User ID - linked to Users|Name of course|Course times|
 
 **Extracurriculars**
 |id|uid|name|calendarData|note|
