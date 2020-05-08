@@ -338,8 +338,41 @@ export class Server {
   }
 
   private async RequestUpdateCourse(req : any, res : any) {
-    var response : object = {};
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+    try {
+      let id = req.params.id;
+
+      let course : Course = await this.database.getCourse(id);
+
+      if (course == null || !this.checkAuthorization(uid, course.uid)) {
+        response = {
+          status: 'unauthorized'
+        };
+      } else {
+
+        if (req.body.title) course.title = req.body.title;
+
+        if (req.body.calendarData !== undefined) course.calendarData = req.body.calendarData;
+        if (req.body.discussionCalendarData !== undefined) course.discussionCalendarData = req.body.discussionCalendarData;
+
+
+        await this.database.putCourse(course)
+        response = {
+          status: 'success',
+          assignment: course.objectify()
+        }
+      }
+
+    } catch(e) {
+
+    }
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
   }
