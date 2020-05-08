@@ -128,7 +128,7 @@ The user's password is stored as a hash in the database, in the user table under
 
 ## Division of Labor ##
 ___
-Kyle -- Group Big Guy, did lots of big guy stuff. 
+Kyle -- Building and deployment, front end design, client side typescript implementation for CRUD operations, backend CRUD operations, database implemenation
 
 Devon -- Database, Calendar system, User authentication and session, User/Assignment/Courses CRUD frontend and backend, Extracurricular/Exam CRUD backend, Server routing and responses, scheduling algorithm
 
