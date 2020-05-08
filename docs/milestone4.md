@@ -44,7 +44,7 @@ ___
 |`/user/:uid`|Gets user data of user with id `uid`|
 |`/user/:uid/calendar`|Returns the events to populate the calendar with (when logged in)|
 
-**Course**
+**Course** (all require login)
 |API|Utility|
 |----|----|
 |`/user/:uid/course/all`|Gets all courses associated with the user|
@@ -53,7 +53,7 @@ ___
 |`/user/:uid/course/update`|Updates a course|
 |`/user/:uid/course/delete`|Deletes a course|
 
-**Assignment**
+**Assignment** (all require login)
 |API|Utility|
 |----|----|
 |`/user/:uid/assignment/all`|Gets all assignments associated with the user|
@@ -62,7 +62,7 @@ ___
 |`/user/:uid/assignment/update`|Updates an assignment|
 |`/user/:uid/assignment/delete`|Deletes an assignment|
 
-**Extracurricular**
+**Extracurricular** (all require login)
 |API|Utility|
 |----|----|
 |`/user/:uid/extracurricular/all`|Gets all extracurriculars associated with the user|
@@ -71,7 +71,7 @@ ___
 |`/user/:uid/extracurricular/update`|Updates an extracurricular|
 |`/user/:uid/extracurricular/delete`|Deletes an extracurricular|
 
-**Exam**
+**Exam** (all require login)
 |API|Utility|
 |----|----|
 |`/user/:uid/exam/all`|Gets all exams associated with the user|
