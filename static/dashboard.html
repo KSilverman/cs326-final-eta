@@ -69,20 +69,32 @@
 						<div class="col d-flex justify-content-center">
 							<ul class="nav nav-tabs" role="tablist">
 							  <li class="nav-item">
-							    <a class="nav-link active" data-toggle="tab" href="#" role="tab" aria-selected="true">Current</a>
+							    <a class="nav-link active" data-toggle="tab" href="#" role="tab" aria-selected="true" id="assTab" onclick="showAss()">Assignments</a>
 							  </li>
 							  <li class="nav-item">
-							    <a class="nav-link" data-toggle="tab" href="#" role="tab" aria-selected="true">Completed</a>
+							    <a class="nav-link" data-toggle="tab" href="#" role="tab" aria-selected="true" id="ecTab" onclick="showEcs()">Extracurriculars</a>
+							  </li>
+							  <li class="nav-item">
+							    <a class="nav-link" data-toggle="tab" href="#" role="tab" aria-selected="true" id="exTab" onclick="showExs()">Exams</a>
+							  </li>
+							  <li class="nav-item">
+							    <a class="nav-link" data-toggle="tab" href="#" role="tab" aria-selected="true" id="compTab" onclick="showComp()">Completed</a>
 							  </li>
 							</ul>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm py-4 text-center">
-							<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addObj">Add Assignment</button>
+							<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addAss">Add Assignment</button>
+							<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addEc">Add Extracurricular</button>
+							<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#addEx">Add Exam</button>
 						</div>
 					</div>
-					<div id="assignments">
+					<div class="tab-content" id="panels">
+						<div class="tab-pane fade show active" id="assignments" role="tabpanel" aria-labelledby="nav-home-tab"></div>
+  						<div class="tab-pane fade show" id="extracurriculars" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
+  						<div class="tab-pane fade show" id="exams" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
+  						<div class="tab-pane fade show" id="completed" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
 					</div>
 				</div>
 			</div>
@@ -183,12 +195,12 @@
 			  </div>
 			</div>
 
-			<!-- ADD OBJECT MODAL -->
-			<div class="modal fade" id="addObj" tabindex="-1" role="dialog" aria-labelledby="objLabel" aria-hidden="true">
+			<!-- ADD ASSIGNMENT MODAL -->
+			<div class="modal fade" id="addAss" tabindex="-1" role="dialog" aria-labelledby="objLabel" aria-hidden="true">
 			  <div class="modal-dialog" role="document">
 			    <div class="modal-content">
 			      <div class="modal-header">
-			        <h5 class="modal-title" id="objLabel">Add Object</h5>
+			        <h5 class="modal-title" id="objLabel">Add Assignment</h5>
 			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			          <span aria-hidden="true">&times;</span>
 			        </button>
@@ -202,11 +214,6 @@
 			          <div class="form-group">
 			            <label for="class-pick" class="col-form-label">Course:</label>
 			            <select class="form-control" id="class-pick">
-			            	  <!--<option>CS 326</option>
-						      <option>CS 490S</option>
-						      <option>CS 520</option>
-						      <option>COMP-LIT 131</option>
-						      <option>ECON 311</option>-->
 			            </select>
 			          </div>
 			          <div class="form-group">
@@ -229,7 +236,83 @@
 			      </div>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			        <button type="button" class="btn btn-primary" onclick="createAssignmentButton()">Add Class</button>
+			        <button type="button" class="btn btn-primary" onclick="createAssignmentButton()">Add Assignment</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- ADD Extracurricular MODAL -->
+			<div class="modal fade" id="addEc" tabindex="-1" role="dialog" aria-labelledby="ecLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="ecLabel">Add Extracurricular</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        <form>
+			          <div class="form-group">
+			            <label for="ec-name" class="col-form-label">Extracurricular Name:</label>
+			            <input type="text" class="form-control" id="ec-name">
+			          </div>
+			          <div class="form-group">
+			            <label for="ec-date" class="col-form-label">Date:</label>
+			            <input type="date" class="form-control" id="ec-date">
+			          </div>
+			          <div class="form-group">
+			            <label for="ec-time" class="col-form-label">Time:</label>
+			            <input type="time" class="form-control" id="ec-time">
+			          </div>
+			          <div class="form-group">
+			            <label for="ec-notes" class="col-form-label">Notes:</label>
+			            <textarea class="form-control" id="ec-notes"></textarea>
+			          </div>
+			        </form>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-primary" onclick="createEcButton()">Add Extracurricular</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- ADD Exam MODAL -->
+			<div class="modal fade" id="addEx" tabindex="-1" role="dialog" aria-labelledby="exLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="exLabel">Add Exam</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        <form>
+			          <div class="form-group">
+			            <label for="ex-name" class="col-form-label">Exam Name:</label>
+			            <input type="text" class="form-control" id="ex-name">
+			          </div>
+			          <div class="form-group">
+			            <label for="ex-date" class="col-form-label">Date:</label>
+			            <input type="date" class="form-control" id="ex-date">
+			          </div>
+			          <div class="form-group">
+			            <label for="ex-time" class="col-form-label">Time:</label>
+			            <input type="time" class="form-control" id="ex-time">
+			          </div>
+			          <div class="form-group">
+			            <label for="ex-notes" class="col-form-label">Notes:</label>
+			            <textarea class="form-control" id="ex-notes"></textarea>
+			          </div>
+			        </form>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-primary" onclick="createExamButton()">Add Exam</button>
 			      </div>
 			    </div>
 			  </div>

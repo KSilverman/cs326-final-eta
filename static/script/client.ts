@@ -139,20 +139,6 @@ async function updateAssignments() : Promise<void> {
 
   var html : string = '';
 
-/*
-  let assignments_input = [];
-
-  for(let cat of categories)
-  {
-    for(let ass of assignments)
-    {
-        assignments_input.push(ass);
-    }
-  }
-
-  let ordered_assignments = getOrderedAssignmentsWithCats(assignments_input);
-  */
-
   for (var category of categories) {
     var title : string = category.title;
     var assignments = category.assignments;
@@ -251,6 +237,26 @@ async function createAssignment(name : string, due : number, ttc : number, cours
   }
 }
 
+async function editAssignment(assId: string, name : string, due : number, ttc : number, courseId : number, notes : string) {
+  let payload : object = {
+    assId: assId,
+    name: name,
+    due: due,
+    ttc: ttc,
+    courseId: courseId,
+    note: notes
+  }
+
+  var resp = await postData('/api/assignment/'+assId+'/update', payload);
+
+  let obj = await resp.json()
+
+  if (obj.status == 'success') {
+    updateAssignments()
+    updateCalendar()
+  }
+}
+
 function deleteAssignmentButton(id : number) {
   deleteAssignment(id);
 }
@@ -265,19 +271,45 @@ async function deleteAssignment(id : number) {
   }
 }
 
-/*
-function getOrderedAssignmentsWithCats(list : any[]) : any[]
+function clearActivePanels()
 {
-  let ordered_list : any[] = [];
-
-  for(let i : number = 0; i < list.length; i++)
+  let panels : any = document.getElementById('panels');
+  for(let p of panels.childNodes)
   {
-      //TODO: Order assignment list
+    if(p != null && typeof p !== 'undefined' && p.nodeName != '#text') {
+      console.log(p)
+      p.classList.remove("active");
+    }
   }
-
-  return ordered_list;
 }
-*/
+
+function showAss()
+{
+  clearActivePanels();
+  let assPanel : any = document.getElementById('assignments');
+  assPanel.classList.add("active");
+}
+
+function showEcs()
+{
+  clearActivePanels();
+  let assPanel : any = document.getElementById('extracurriculars');
+  assPanel.classList.add("active");
+}
+
+function showExs()
+{
+  clearActivePanels();
+  let assPanel : any = document.getElementById('exams');
+  assPanel.classList.add("active");
+}
+
+function showComp()
+{
+  clearActivePanels();
+  let assPanel : any = document.getElementById('completed');
+  assPanel.classList.add("active");
+}
 
 // NEW: helper method for posting data
 async function postData(url : string, data : any) {
