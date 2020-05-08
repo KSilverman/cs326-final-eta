@@ -584,14 +584,16 @@ export class Server {
       let startTime = pair.startTime;
       let assignment = pair.assignment;
 
+      let course : Course = await this.database.getCourse(assignment.courseId);
+
       let calendarEntry = {
         type: 'assignment',
         id: assignment.id,
         event: {
-          title: assignment.name,
+          title: '[' + course.title + '] ' + assignment.name,
           start: startTime,
-          end: startTime + assignment.ttc,
-          backgroundColor: colors[assignment.courseId] + '44',
+          end: startTime + (assignment.ttc * 3600 * 1000),
+          backgroundColor: colors[assignment.courseId] + '77',
           borderColor: colors[assignment.courseId]
         }
       }

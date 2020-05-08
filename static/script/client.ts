@@ -80,11 +80,11 @@ function setupDashboardCalendar() : void {
   var calendarEl = document.getElementById('calendar');
 
   calendar = new FullCalendar.Calendar(calendarEl, {
-    plugins: [ 'dayGrid' ],
-
-    // for week view
-    defaultView: 'dayGridWeek',
-    height: 320
+    plugins: [ 'timeGrid' ],
+    defaultView: 'timeGridWeek',
+    height: 400,
+    scrollTime: Date.now(),
+    slotDuration: '01:00:00'
   });
 
   calendar.render();
