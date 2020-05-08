@@ -188,7 +188,7 @@ async function updateAssignments() : Promise<void> {
       html += '<td>' + expectedTTC + '</td>'
       html += '<td>' + notes + '</td>'
       html += '<td><button type="button" class="btn btn-success btn-sm" title="Completed">&#10004;</button>';
-      html += '<button type="button" class="btn btn-primary btn-sm" title="Edit">&#9997;</button>';
+      html += '<button type="button" class="btn btn-primary btn-sm" title="Edit" onclick="editAssignmentButton(' + assignment.id + ')">&#9997;</button>';
       html += '<button type="button" class="btn btn-danger btn-sm" title="Remove" onclick="deleteAssignmentButton(' + assignment.id + ')">&#10006;</button></td></tr>';
     }
 
@@ -222,6 +222,42 @@ function createAssignmentButton() {
   createAssignment(name, due, ttc, course, notes)
 }
 
+function createEctButton() {
+  let nameElement = document.getElementById('ec-name') as HTMLInputElement;
+  let dateElement = document.getElementById('ec-date') as HTMLInputElement;
+  let timeElement = document.getElementById('ec-time') as HTMLInputElement;
+  let endTimeElement = document.getElementById('ec-end-time') as HTMLInputElement;
+  let notesElement = document.getElementById('ec-notes') as HTMLInputElement;
+
+  let date = dateElement.value;
+  let time = timeElement.value;
+  let end = endTimeElement.value
+
+  let name = nameElement.value;
+  let notes = notesElement.value;
+
+  createExtracurricular(name, date, time, end, notes)
+}
+
+function createExButton() {
+  let nameElement = document.getElementById('ex-name') as HTMLInputElement;
+  let classElement = document.getElementById('class-pick-ex') as HTMLInputElement;
+  let dateElement = document.getElementById('ex-date') as HTMLInputElement;
+  let timeElement = document.getElementById('ex-time') as HTMLInputElement;
+  let endTimeElement = document.getElementById('ex-end-time') as HTMLInputElement;
+  let notesElement = document.getElementById('ex-notes') as HTMLInputElement;
+
+  let date = dateElement.value;
+  let time = timeElement.value;
+  let end = endTimeElement.value
+
+  let name = nameElement.value;
+  let course = parseInt(classElement.value) || 3;
+  let notes = notesElement.value;
+
+  createExam(name, course, date, time, end, notes)
+}
+
 async function createAssignment(name : string, due : number, ttc : number, courseId : number, notes : string) {
   let payload : object = {
     name: name,
@@ -238,6 +274,46 @@ async function createAssignment(name : string, due : number, ttc : number, cours
   if (obj.status == 'success') {
     updateAssignments()
 		updateCalendar()
+  }
+}
+
+async function createExtracurricular(name : string, date : string, time : string, end : string, notes : string)
+{
+  let payload : object = {
+    name: name,
+    date: date,
+    time: time,
+    end: end,
+    note: notes
+  }
+
+  var resp = await postData('/api/extracurricular/create', payload);
+
+  let obj = await resp.json()
+
+  if (obj.status == 'success') {
+    updateAssignments()
+    updateCalendar()
+  }
+}
+
+async function createExam(name : string, courseId : number, date : string, time : string, end : string, notes : string) {
+  let payload : object = {
+    name: name,
+    courseId: courseId,
+    date: date,
+    time: time,
+    end: end,
+    note: notes
+  }
+
+  var resp = await postData('/api/exam/create', payload);
+
+  let obj = await resp.json()
+
+  if (obj.status == 'success') {
+    updateAssignments()
+    updateCalendar()
   }
 }
 
@@ -273,28 +349,6 @@ async function deleteAssignment(id : number) {
   if (obj.status == 'success') {
     updateAssignments()
     updateCalendar()
-  }
-}
-
-function createExamButton() {
-  // TODO : fill in fields, call createExam
-}
-
-async function createExam(name : string, courseId : number, startTime : string, endTime : string) {
-  let payload : object = {
-    name: name,
-    course: courseId,
-    startTime: startTime,
-    endTime: endTime
-  }
-
-  var resp = await postData('/api/exam/create', payload);
-
-  let obj = await resp.json()
-
-  if (obj.status == 'success') {
-    updateAssignments()
-		updateCalendar()
   }
 }
 
