@@ -13,7 +13,7 @@ export class Extracurricular {
         this.id = id;
     }
 
-    public async objectify() : Promise<any> {
+    public objectify() : object{
         return {
           'name': this.name,
           'id': this.id,

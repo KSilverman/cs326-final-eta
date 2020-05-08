@@ -25,7 +25,7 @@ export class Assignment {
         this.completed = completed;
     }
 
-    public async objectify() : Promise<any> {
+    public objectify() : object {
       return {
         id: this.id,
         uid: this.uid,
