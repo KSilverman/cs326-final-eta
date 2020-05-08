@@ -262,9 +262,42 @@ async function deleteAssignment(id : number) {
 
   if (obj.status == 'success') {
     updateAssignments()
+    updateCalendar()
   }
 }
 
+function createExamButton() {
+  // TODO : fill in fields, call createExam
+}
+
+async function createExam(name : string, courseId : number, startTime : string, endTime : string) {
+  let payload : object = {
+    name: name,
+    course: courseId,
+    startTime: startTime,
+    endTime: endTime
+  }
+
+  var resp = await postData('/api/exam/create', payload);
+
+  let obj = await resp.json()
+
+  if (obj.status == 'success') {
+    updateAssignments()
+		updateCalendar()
+  }
+}
+
+async function deleteExam(id : number) {
+  var resp = await postData('/api/exam/' + id + '/delete', {});
+
+  let obj = await resp.json()
+
+  if (obj.status == 'success') {
+    // updateAssignments()
+    updateCalendar()
+  }
+}
 /*
 function getOrderedAssignmentsWithCats(list : any[]) : any[]
 {
