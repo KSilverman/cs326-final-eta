@@ -560,9 +560,11 @@ export class Server {
     }
     var uid : number = _uid;
 
+    console.log(req.params)
+
     let response;
     try {
-      let id = req.params.id;
+      let id  : number = parseInt(req.params.id);
 
       let assignment = await this.database.getAssignment(id);
 
@@ -591,7 +593,10 @@ export class Server {
       }
 
     } catch(e) {
-
+      response = {
+        status: 'error',
+        message: e.message
+      }
     }
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response))
@@ -838,7 +843,7 @@ export class Server {
       console.log(dayOfWeek)
 
       if (eventData.daysOfWeek.map((x : any) => parseInt(x)).includes(dayOfWeek)) {
-        
+
         // this is jank
         let startString = day.toDateString() + ' ' + eventData.start
         let startDate = new Date(startString)
