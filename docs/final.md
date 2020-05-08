@@ -126,11 +126,18 @@ Things happen! You can log in. It works. For every URL call that you try to make
 ___
 ## Division of Labor ##
 ___
-Kyle --
+Kyle -- Group Big Guy, did lots of big guy stuff. 
 
-Devon -- 
+Devon -- Another group Big Guy. Did plenty of big guy stuff himself.
 
 Artem -- Helped brainstorm overall format and layout of site. Found icon. Made index.html. Populated skeleton code in types folder. Populated functions in database.ts. Populated functions in server.ts. Did this write-up.
 
 ## Conclusion ##
 ___
+Creating PlanIt was an unexpectedly large challenge considering how simple the core concept was. It turned out that while the job-scheduling algorithm was the novelty behind this project, creating the rest of the basic functionality was the biggest task.
+
+The design process was fairly straightforward. It turns out that with a group this small, collaborating and hashing out exactly what sort of functionality we would like to see had very little conflict overall and was easy to figure out. Following this, creating the UI visually was very easy - all it took was a little bit of fiddling with Bootstrap code. Populating the feed and the database and making all the buttons and modals actually store the data was a large hurdle. Creating this basic functionality took a *lot* longer than it felt like it should -- simple doesn't mean easy.
+
+Something that plagued this project a lot was basic technology issues. While we were editing code together, oftentimes GitHub would not allow us to pull or to merge without reverting changes and it wasn't always clear what the problem was. If we were to do it again, we might consider doing this project with branches instead of everyone commiting directly to the master branch. The project also did not work on everyone's machines with all other things equal at certain steps, with no indication of why and what the problem was. These challenges were really frustrating considering they were just blocks to actually doing work - not issues with the actual work itself. Which, one could argue, is a part of a project in itself. Workflow is extremely important, and this project taught us that it is much harder to manage than it looks.
+
+This project was ultimately an exercise in self-managing. There's no getting around the fact that organizing code, managing time, and working out small but deadly kinks were major pitfalls in working on this project. The exercise taught us a lot and in the future, we hope to have a lovely smart little planner like PlanIt to help us keep track of things.
