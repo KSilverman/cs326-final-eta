@@ -350,7 +350,7 @@ export class Database {
     return ec;
   }
 
-  public async getECForUser(uid : number) : Promise<Extracurricular[] | null> {
+  public async getECForUser(uid : number) : Promise<Extracurricular[]> {
     let db = this.client.db(this.dbName);
     let collection = db.collection('extracurriculars');
 
