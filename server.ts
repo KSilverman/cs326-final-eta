@@ -476,7 +476,7 @@ export class Server {
       var courseId = req.body.courseId;
       var due = req.body.due;
       var note = req.body.note;
-      var ttc = req.body.ttc;
+      var ttc = Math.min(parseInt(req.body.ttc), 24 * 365);
 
       let assignment = await this.database.createAssignment(uid, name, courseId, due, note, ttc);
 
@@ -559,7 +559,7 @@ export class Server {
         if (req.body.note !== undefined) assignment.note = req.body.note;
 
         if (req.body.due !== undefined) assignment.due = req.body.due;
-        if (req.body.ttc !== undefined) assignment.ttc = req.body.ttc;
+        if (req.body.ttc !== undefined) assignment.ttc = Math.min(parseInt(req.body.ttc), 24 * 365);
 
         if (req.body.completed !== undefined) assignment.completed = req.body.completed;
 
