@@ -343,7 +343,7 @@ async function editAssignment(assId: string, name : string, due : number, ttc : 
 }
 
 // populates moda with existing info
-let currentEdittingAssignment = null;
+let currentEdittingAssignment : any = null;
 function editAssignmentButton(id : number) {
   currentEdittingAssignment = id;
 
