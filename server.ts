@@ -873,6 +873,10 @@ export class Server {
 
     let res : any[] = [];
 
+    while (timeBlocks.length > 0 && timeBlocks[timeBlocks.length - 1].start > lastAssignmentDue) {
+      timeBlocks.pop()
+    }
+
     let startTime = assignments[0].due;
     for (let assignment of assignments) {
       if (startTime > assignment.due)
