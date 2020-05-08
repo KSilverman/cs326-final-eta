@@ -217,10 +217,10 @@ export class Database {
     return id;
   }
 
-  public async createCourse(uid : number, name : string, calendarData : object[]) : Promise<Course> {
+  public async createCourse(uid : number, name : string, calendarData : object, discussionCalendarData : object) : Promise<Course> {
     let id = await this.getNextCourseId();
 
-    let course : Course = new Course(id, uid, name, calendarData)
+    let course : Course = new Course(id, uid, name, calendarData, discussionCalendarData)
     await this.putCourse(course);
 
     return course;
@@ -253,7 +253,7 @@ export class Database {
       }
     );
 
-    let course : Course = new Course(res.id, res.uid, res.title, res.calendarData)
+    let course : Course = new Course(res.id, res.uid, res.title, res.calendarData, res.discussionCalendarData)
 
     return course;
   }
@@ -292,7 +292,7 @@ export class Database {
 
       let results = await result.toArray()
       for (let res of results) {
-        let course : Course = new Course(res.id, res.uid, res.title, res.calendarData)
+        let course : Course = new Course(res.id, res.uid, res.title, res.calendarData, res.discussionCalendarData)
         courses.push(course)
       }
 
@@ -312,7 +312,7 @@ export class Database {
   public async createEC(uid : number, name : string, calendarData : object[], note : string) : Promise<Extracurricular> {
     let id = await this.getNextECId();
 
-    let ec : Extracurricular = new Extracurricular(calendarData, name,note, id, uid);
+    let ec : Extracurricular = new Extracurricular(calendarData, name, note, id, uid);
     await this.putEC(ec);
 
     return ec;

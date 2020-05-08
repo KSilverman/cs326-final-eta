@@ -74,9 +74,11 @@ async function getCourses() : Promise<void>
 	}
 }
 
-async function createCourse(name : string) {
+async function createCourse(name : string, calendarData : object | null, discussionCalendarData : object | null) {
 	let payload : object = {
-    name: name
+    name: name,
+		calendarData: calendarData,
+		discussionCalendarData: discussionCalendarData
   }
 
   var resp = await postData('/api/course/create', payload);
@@ -94,8 +96,44 @@ function createCourseButton() {
   let nameElement = document.getElementById('class-name') as HTMLInputElement;
   let name = nameElement.value;
 
+	let daysOfWeek = []
+	for (let i = 0; i < 7; i++) {
+		let dayElement = document.getElementById('class-day-' + i) as HTMLInputElement;
+		if (dayElement.checked) {
+			daysOfWeek.push(i)
+		}
+	}
+
+	let startTimeElement = document.getElementById('class-start') as HTMLInputElement;
+	let endTimeElement = document.getElementById('class-end') as HTMLInputElement;
+
+	let startTime = startTimeElement.value
+	let endTime = endTimeElement.value
+
+	let courseCalendarData = {
+		startTime: startTime,
+		endTime: endTime,
+		daysOfWeek: daysOfWeek
+	}
+
+	let discussionCalendarData = null;
+
+  let hasDiscussionElement = document.getElementById('class-has-discussion') as HTMLInputElement;
+	if (hasDiscussionElement.checked) {
+
+			let dstartTimeElement = document.getElementById('class-discussion-start') as HTMLInputElement;
+			let dendTimeElement = document.getElementById('class-discussion-end') as HTMLInputElement;
+			let dayOfWeekElement = document.getElementById('class-discussion-day') as HTMLInputElement;
+
+			discussionCalendarData = {
+				startTime: dstartTimeElement.value,
+				endTime: dendTimeElement.value,
+				daysOfWeek: [dayOfWeekElement.value]
+			}
+	}
+
 	if (name) {
-		createCourse(name)
+		createCourse(name, courseCalendarData, discussionCalendarData)
 	}
 }
 
