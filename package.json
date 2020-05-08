@@ -31,6 +31,7 @@
     "express-session": "^1.17.1",
     "js-cookie": "^2.2.1",
     "mongodb": "^3.5.7",
+    "npm": "^6.14.5",
     "ts-node": "^8.9.0",
     "typescript": "^3.8.3",
     "update-mongo": "0.0.4",

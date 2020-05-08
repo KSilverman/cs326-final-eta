@@ -1,4 +1,6 @@
+console.log("user before");
 const bcrypt = require('bcrypt')
+console.log("user after");
 
 export class User {
   readonly id : number;
@@ -39,7 +41,7 @@ export class User {
     return match as boolean;
   }
 
-  public async objectify() : Promise<any> {
+  public objectify() : object {
     return {
       id: this.id,
       username: this.username,

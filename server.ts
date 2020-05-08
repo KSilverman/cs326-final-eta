@@ -150,7 +150,7 @@ export class Server {
 
         response = {
           status: 'success',
-          user: await user.objectify()
+          user: user.objectify()
         };
       }
     } catch (e) {
@@ -181,7 +181,7 @@ export class Server {
       if (await user.checkHash(req.body.password)) {
         // auth success
         response.status = 'success';
-        response.user = await user.objectify();
+        response.user = user.objectify();
         response.message = '';
 
         req.session.uid = user.id;
@@ -203,7 +203,7 @@ export class Server {
 
       response = {
         'status': 'success',
-        'user': await user.objectify()
+        'user': user.objectify()
       }
     } catch(e) {
       console.log(e)
@@ -261,13 +261,15 @@ export class Server {
     try {
 
       let name = req.body.name;
+      let calendarData = req.body.calendarData;
+      let discussionCalendarData = req.body.discussionCalendarData;
 
       if (name) {
-        let course : Course = await this.database.createCourse(uid, name, [])
+        let course : Course = await this.database.createCourse(uid, name, calendarData, discussionCalendarData)
 
         response = {
           status: 'success',
-          course: await course.objectify()
+          course: course.objectify()
         }
 
       } else {
@@ -427,7 +429,7 @@ export class Server {
         category = {title: categoryData[currentCategory].title, assignments: []}
       }
 
-      category.assignments.push(await assignment.objectify());
+      category.assignments.push(assignment.objectify());
 
     }
 
@@ -467,7 +469,7 @@ export class Server {
 
       response = {
         status: 'success',
-        assignment: await assignment.objectify()
+        assignment: assignment.objectify()
       }
     } catch (e) {
       response = {
@@ -503,7 +505,7 @@ export class Server {
         await this.database.deleteAssignment(id)
         response = {
           status: 'success',
-          assignment: await assignment.objectify()
+          assignment: assignment.objectify()
         }
       }
 
@@ -524,7 +526,34 @@ export class Server {
   }
 
   private async RequestGetAllExams(req : any, res : any) {
+    //console.log(req);
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+
+    try {
+      let exams : Exam[] = await this.database.getExamsForUser(uid)
+
+      response = {
+        status: 'success',
+        courses: exams.map((x) => x.objectify())
+      }
+
+    } catch (e) {
+      response = {
+        status: 'error',
+        message: e.message
+      }
+    }
+
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestGetExam(req : any, res : any) {
@@ -569,7 +598,34 @@ export class Server {
   }
 
   private async RequestGetAllExtracurriculars(req : any, res : any) {
+    //console.log(req);
+    var _uid = this.validateSessionAndGetUID(req);
+    if (_uid == null) {
+      res.end(JSON.stringify({status: 'unauthorized'}));
+      return;
+    }
+    var uid : number = _uid;
 
+    let response;
+
+    try {
+      let ecs : Extracurricular[] = await this.database.getECForUser(uid)
+
+      response = {
+        status: 'success',
+        courses: ecs.map((x) => x.objectify())
+      }
+
+    } catch (e) {
+      response = {
+        status: 'error',
+        message: e.message
+      }
+    }
+
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(response))
   }
 
   private async RequestGetExtracurricular(req : any, res : any) {
@@ -594,10 +650,36 @@ export class Server {
 
     let calendarEvents = [];
 
-    let exams = await this.database.getExamsForUser(uid);
+    let exams            = await this.database.getExamsForUser(uid);
     // let extracurriculars = await this.database.getExtracurricularsForUser(uid);
     let assignments      = await this.database.getAssignmentsForUser(uid);
-    // let courses          = await this.database.getCoursesForUser(uid);
+    let courses          = await this.database.getCoursesForUser(uid);
+
+    let colors = ['#fd588d', '#fd8a5e', '#f6eb52', '#46ddf2', '#10ccbc']
+
+    for (let course of courses) {
+      let event : any = Object.assign({}, course.calendarData)
+      event.title = course.title;
+      event.color = colors[course.id % 5];
+
+      calendarEvents.push({
+        type: 'course',
+        id: course.id,
+        event: event
+      })
+
+      if (course.discussionCalendarData) {
+        let dEvent : any = Object.assign({}, course.discussionCalendarData)
+        dEvent.title = course.title + ' Discussion';
+        dEvent.color = colors[course.id % 5];
+
+        calendarEvents.push({
+          type: 'course',
+          id: course.id,
+          event: dEvent
+        })
+      }
+    }
 
     for (let exam of exams) {
       let calendarEntry = {
@@ -608,8 +690,6 @@ export class Server {
 
       calendarEvents.push(calendarEntry)
     }
-
-    let colors = ['#fd588d', '#fd8a5e', '#f6eb52', '#46ddf2', '#10ccbc']
 
     let assignmentTimePairs = this.getAssignmentStartTimes(assignments, []);
     for (let pair of assignmentTimePairs) {
@@ -625,8 +705,8 @@ export class Server {
           title: '[' + course.title + '] ' + assignment.name,
           start: startTime,
           end: startTime + (assignment.ttc * 3600 * 1000),
-          backgroundColor: colors[assignment.courseId] + '77',
-          borderColor: colors[assignment.courseId]
+          backgroundColor: colors[assignment.courseId % 5] + '77',
+          borderColor: colors[assignment.courseId % 5]
         }
       }
 
